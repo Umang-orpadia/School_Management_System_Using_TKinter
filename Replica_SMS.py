@@ -13,4 +13,12 @@ password_label = Label(text="password")
 password_label.grid(row=1 , column=0 ,padx=20 ,pady=20)
 
 
+username_entry = Entry()
+username_entry.grid(row=0 , column=1 )
+
+password_entry = Entry()
+password_entry.grid(row=1 , column=1 )
+
+
+
 root.mainloop() 
