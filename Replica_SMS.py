@@ -1,4 +1,5 @@
 from tkinter import *
+# import tkinter as tk
 import mysql.connector
 
 
@@ -14,11 +15,16 @@ user_label.grid(row=0 , column=0 ,padx=20 ,pady=20)
 password_label = Label(root,text="password")
 password_label.grid(row=1 , column=0 ,padx=20 ,pady=20)
 
+username = 'orpadiau@gmial.com'
+password = 'Umang@5885'
 
-username_entry = Entry(root)
+text2 = StringVar() 
+text2.set(username) 
+username_entry = Entry(root , textvariable=text2)
 username_entry.grid(row=0 , column=1 )
-
-password_entry = Entry(root)
+text1 = StringVar() 
+text1.set("Umang@5885") 
+password_entry = Entry(root , textvariable=text1)
 password_entry.grid(row=1 , column=1 )
 
 conn = mysql.connector.connect(host = "localhost" , user = "root" , password = "")
@@ -27,8 +33,53 @@ mycursor.execute('use school_system;')
 
 def Verify_details():
     # mycursor.execute(f"INSERT INTO student VALUES('{username_entry.get()}','{password_entry.get()}','21.01.2005','8591237049','orpadiau@gmail.com');")
-    print(mycursor)
-    conn.commit()
+    root3 = Tk()
+    root3.geometry("800x600")
+    mycursor.execute( f' SELECT * FROM student WHERE sei = "{username_entry.get()}" AND upass = "{password_entry.get()}" ')
+
+    for i in mycursor:
+        print(i)
+
+    test = StringVar()
+    # test = [(i[0],i[1],i[2],i[3]),i[4],i[5]]
+    test.set("hi")
+    student_name1_label = Label(root3 , text="Name: ")
+    student_name1_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
+
+    student_name1_entry = Entry(root3 , textvariable=test)
+    student_name1_entry.grid(row = 0 , column = 1 , padx = 20 , pady = 20)
+
+    student_roll1_label = Label(root3,text='Roll no : ')
+    student_roll1_label.grid(row = 1 , column = 0 , padx = 20 , pady = 20)
+
+    student_roll1_entry = Entry(root3)
+    student_roll1_entry.grid(row = 1 , column = 1 , padx = 20 , pady = 20)
+
+    student_dob1_label = Label(root3,text='Date Of Birth')
+    student_dob1_label.grid(row = 2 , column = 0 , padx = 20 , pady = 20)
+
+    student_dob1_entry = Entry(root3)
+    student_dob1_entry.grid(row = 2 , column = 1 , padx = 20 , pady = 20)
+
+    student_contact1_label = Label(root3,text='Mobile No : ')
+    student_contact1_label.grid(row = 3 , column = 0 , padx = 20 , pady = 20)
+
+    student_contact1_entry = Entry(root3)
+    student_contact1_entry.grid(row = 3 , column = 1 , padx = 20 , pady = 20)
+
+    student_email1_label = Label(root3,text='E-mail : ')
+    student_email1_label.grid(row = 4 , column = 0 , padx = 20 , pady = 20)
+
+    student_email1_entry = Entry(root3)
+    student_email1_entry.grid(row = 4 , column = 1 , padx = 20 , pady = 20)
+
+    student_password1_label = Label(root3,text='Password : ')
+    student_password1_label.grid(row = 5 , column = 0 , padx = 20 , pady = 20)
+
+    student_password1_entry = Entry(root3)
+    student_password1_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
+    root3.mainloop()
+    # conn.commit()
 
 login_btn = Button(root ,text="Login", command=Verify_details)
 login_btn.grid(row=2, column=1)
@@ -69,13 +120,19 @@ student_email_label.grid(row = 4 , column = 0 , padx = 20 , pady = 20)
 student_email_entry = Entry(root1)
 student_email_entry.grid(row = 4 , column = 1 , padx = 20 , pady = 20)
 
+student_password_label = Label(root1,text='Password : ')
+student_password_label.grid(row = 5 , column = 0 , padx = 20 , pady = 20)
+
+student_password_entry = Entry(root1)
+student_password_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
+
 def register():
-    mycursor.execute(f"INSERT INTO student VALUES('{student_name_entry.get()}','{student_roll_entry.get()}','{student_dob_entry.get()}','{student_contact_entry.get()}','{student_email_entry.get()}');")
+    mycursor.execute(f"INSERT INTO student VALUES('{student_name_entry.get()}','{student_roll_entry.get()}','{student_dob_entry.get()}','{student_contact_entry.get()}','{student_email_entry.get()}','{student_password_entry.get()}');")
     print(mycursor)
     conn.commit()
 
 register_btn = Button(root1,text = 'Register' , command = register)
-register_btn.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
+register_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
 
 root1.mainloop()
 
