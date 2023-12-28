@@ -15,16 +15,10 @@ user_label.grid(row=0 , column=0 ,padx=20 ,pady=20)
 password_label = Label(root,text="password")
 password_label.grid(row=1 , column=0 ,padx=20 ,pady=20)
 
-username = 'orpadiau@gmail.com'
-password = 'Umang@5885'
-
-text2 = StringVar() 
-text2.set(username) 
-username_entry = Entry(root , textvariable=text2)
+username_entry = Entry(root)
 username_entry.grid(row=0 , column=1 )
-text1 = StringVar() 
-text1.set("Umang@5885") 
-password_entry = Entry(root , textvariable=text1)
+
+password_entry = Entry(root)
 password_entry.grid(row=1 , column=1 )
 
 conn = mysql.connector.connect(host = "localhost" , user = "root" , password = "")
@@ -96,66 +90,78 @@ def Verify_details():
         mycursor.execute( f"UPDATE student SET sn = '{student_name1_entry.get()}' ,srn = '{student_roll1_entry.get()}' ,sdob = '{student_dob1_entry.get()}' ,scn = '{student_contact1_entry.get()}' ,sei = '{student_email1_entry.get()}' ,upass = '{student_password1_entry.get()}' WHERE srn = '{student_rollno}';" )
         print(mycursor)
         conn.commit()
+
+    def delete_entry():
+        mycursor.execute(f"DELETE FROM student WHERE sei = '{student_email1_entry.get()}'")
+        conn.commit()
+
+
     Update_btn = Button(root3 , text='Update' , command=Update_entry)
     Update_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+
+    delete_btn = Button(root3 , text='Delete' , command=delete_entry)
+    delete_btn.grid(row = 7 , column = 1 , padx = 20 , pady = 20)
     root3.mainloop()
 
 login_btn = Button(root ,text="Login", command=Verify_details)
 login_btn.grid(row=2, column=1)
 
 
+def register_window():
 
-root1 = Tk()
-root1.geometry('900x700')
-root1.title('This is registration Window')
-root1.configure(background='purple')
+    root1 = Tk()
+    root1.geometry('900x700')
+    root1.title('This is registration Window')
+    root1.configure(background='purple')
 
-student_name_label = Label(root1,text='Name')
-student_name_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
+    student_name_label = Label(root1,text='Name')
+    student_name_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
 
-student_name_entry = Entry(root1 ,textvariable=text2)
-student_name_entry.grid(row = 0 , column = 1 , padx = 20 , pady = 20)
+    student_name_entry = Entry(root1)
+    student_name_entry.grid(row = 0 , column = 1 , padx = 20 , pady = 20)
 
-student_roll_label = Label(root1,text='Roll no : ')
-student_roll_label.grid(row = 1 , column = 0 , padx = 20 , pady = 20)
+    student_roll_label = Label(root1,text='Roll no : ')
+    student_roll_label.grid(row = 1 , column = 0 , padx = 20 , pady = 20)
 
-student_roll_entry = Entry(root1)
-student_roll_entry.grid(row = 1 , column = 1 , padx = 20 , pady = 20)
+    student_roll_entry = Entry(root1)
+    student_roll_entry.grid(row = 1 , column = 1 , padx = 20 , pady = 20)
 
-student_dob_label = Label(root1,text='Date Of Birth')
-student_dob_label.grid(row = 2 , column = 0 , padx = 20 , pady = 20)
+    student_dob_label = Label(root1,text='Date Of Birth')
+    student_dob_label.grid(row = 2 , column = 0 , padx = 20 , pady = 20)
 
-student_dob_entry = Entry(root1)
-student_dob_entry.grid(row = 2 , column = 1 , padx = 20 , pady = 20)
+    student_dob_entry = Entry(root1)
+    student_dob_entry.grid(row = 2 , column = 1 , padx = 20 , pady = 20)
 
-student_contact_label = Label(root1,text='Mobile No : ')
-student_contact_label.grid(row = 3 , column = 0 , padx = 20 , pady = 20)
+    student_contact_label = Label(root1,text='Mobile No : ')
+    student_contact_label.grid(row = 3 , column = 0 , padx = 20 , pady = 20)
 
-student_contact_entry = Entry(root1)
-student_contact_entry.grid(row = 3 , column = 1 , padx = 20 , pady = 20)
+    student_contact_entry = Entry(root1)
+    student_contact_entry.grid(row = 3 , column = 1 , padx = 20 , pady = 20)
 
-student_email_label = Label(root1,text='E-mail : ')
-student_email_label.grid(row = 4 , column = 0 , padx = 20 , pady = 20)
+    student_email_label = Label(root1,text='E-mail : ')
+    student_email_label.grid(row = 4 , column = 0 , padx = 20 , pady = 20)
 
-student_email_entry = Entry(root1)
-student_email_entry.grid(row = 4 , column = 1 , padx = 20 , pady = 20)
+    student_email_entry = Entry(root1)
+    student_email_entry.grid(row = 4 , column = 1 , padx = 20 , pady = 20)
 
-student_password_label = Label(root1,text='Password : ')
-student_password_label.grid(row = 5 , column = 0 , padx = 20 , pady = 20)
+    student_password_label = Label(root1,text='Password : ')
+    student_password_label.grid(row = 5 , column = 0 , padx = 20 , pady = 20)
 
-student_password_entry = Entry(root1)
-student_password_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
+    student_password_entry = Entry(root1)
+    student_password_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
 
-def register():
-    mycursor.execute(f"INSERT INTO student VALUES('{student_name_entry.get()}','{student_roll_entry.get()}','{student_dob_entry.get()}','{student_contact_entry.get()}','{student_email_entry.get()}','{student_password_entry.get()}');")
-    print(mycursor)
-    conn.commit()
+    def register():
+        mycursor.execute(f"INSERT INTO student VALUES('{student_name_entry.get()}','{student_roll_entry.get()}','{student_dob_entry.get()}','{student_contact_entry.get()}','{student_email_entry.get()}','{student_password_entry.get()}');")
+        print(mycursor)
+        conn.commit()
 
-register_btn = Button(root1,text = 'Register' , command = register)
-register_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+    register_btn = Button(root1,text = 'Register' , command = register)
+    register_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+    root1.mainloop()
 
-root1.mainloop()
 
+register_btn = Button(root ,text="Add Student", command=register_window)
+register_btn.grid(row=3, column=1)
 
 root.mainloop()
 
