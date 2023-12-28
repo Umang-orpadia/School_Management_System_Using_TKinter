@@ -15,7 +15,7 @@ user_label.grid(row=0 , column=0 ,padx=20 ,pady=20)
 password_label = Label(root,text="password")
 password_label.grid(row=1 , column=0 ,padx=20 ,pady=20)
 
-username = 'orpadiau@gmial.com'
+username = 'orpadiau@gmail.com'
 password = 'Umang@5885'
 
 text2 = StringVar() 
@@ -32,21 +32,27 @@ mycursor = conn.cursor()
 mycursor.execute('use school_system;')
 
 def Verify_details():
-    # mycursor.execute(f"INSERT INTO student VALUES('{username_entry.get()}','{password_entry.get()}','21.01.2005','8591237049','orpadiau@gmail.com');")
     root3 = Tk()
     root3.geometry("800x600")
+    root3.title("This is Update Page")
+    root3.configure(background='pink')
     mycursor.execute( f' SELECT * FROM student WHERE sei = "{username_entry.get()}" AND upass = "{password_entry.get()}" ')
 
-    for i in mycursor:
-        print(i)
+    fetch_data = mycursor.fetchone()
+    student_name = fetch_data[0]
+    student_rollno = fetch_data[1]
+    student_dob = fetch_data[2]
+    student_contactno = fetch_data[3]
+    student_emailid = fetch_data[4]
+    student_password = fetch_data[5]
 
-    test = StringVar()
-    # test = [(i[0],i[1],i[2],i[3]),i[4],i[5]]
-    test.set("hi")
+
+
+
     student_name1_label = Label(root3 , text="Name: ")
     student_name1_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
 
-    student_name1_entry = Entry(root3 , textvariable=test)
+    student_name1_entry = Entry(root3)
     student_name1_entry.grid(row = 0 , column = 1 , padx = 20 , pady = 20)
 
     student_roll1_label = Label(root3,text='Roll no : ')
@@ -78,8 +84,21 @@ def Verify_details():
 
     student_password1_entry = Entry(root3)
     student_password1_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
+
+    student_name1_entry.insert(0,student_name)
+    student_roll1_entry.insert(0,student_rollno)
+    student_dob1_entry.insert(0,student_dob)
+    student_contact1_entry.insert(0,student_contactno)
+    student_email1_entry.insert(0,student_emailid)
+    student_password1_entry.insert(0,student_password)
+
+    def Update_entry():
+        mycursor.execute( f"UPDATE student SET sn = '{student_name1_entry.get()}' ,srn = '{student_roll1_entry.get()}' ,sdob = '{student_dob1_entry.get()}' ,scn = '{student_contact1_entry.get()}' ,sei = '{student_email1_entry.get()}' ,upass = '{student_password1_entry.get()}' WHERE srn = '{student_rollno}';" )
+        print(mycursor)
+        conn.commit()
+    Update_btn = Button(root3 , text='Update' , command=Update_entry)
+    Update_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
     root3.mainloop()
-    # conn.commit()
 
 login_btn = Button(root ,text="Login", command=Verify_details)
 login_btn.grid(row=2, column=1)
@@ -88,12 +107,13 @@ login_btn.grid(row=2, column=1)
 
 root1 = Tk()
 root1.geometry('900x700')
+root1.title('This is registration Window')
 root1.configure(background='purple')
 
 student_name_label = Label(root1,text='Name')
 student_name_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
 
-student_name_entry = Entry(root1)
+student_name_entry = Entry(root1 ,textvariable=text2)
 student_name_entry.grid(row = 0 , column = 1 , padx = 20 , pady = 20)
 
 student_roll_label = Label(root1,text='Roll no : ')
