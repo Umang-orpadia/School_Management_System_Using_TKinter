@@ -30,7 +30,10 @@ def Verify_details():
     root3.geometry("800x600")
     root3.title("This is Update Page")
     root3.configure(background='pink')
-    mycursor.execute( f' SELECT * FROM student WHERE sei = "{username_entry.get()}" AND upass = "{password_entry.get()}" ')
+
+    sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
+    val2 = (username_entry.get(),password_entry.get())
+    mycursor.execute(sql2 , val2)
 
     fetch_data = mycursor.fetchone()
     student_name = fetch_data[0]
@@ -39,9 +42,6 @@ def Verify_details():
     student_contactno = fetch_data[3]
     student_emailid = fetch_data[4]
     student_password = fetch_data[5]
-
-
-
 
     student_name1_label = Label(root3 , text="Name: ")
     student_name1_label.grid(row = 0 , column = 0 , padx = 20 , pady = 20)
@@ -151,7 +151,11 @@ def register_window():
     student_password_entry.grid(row = 5 , column = 1 , padx = 20 , pady = 20)
 
     def register():
-        mycursor.execute(f"INSERT INTO student VALUES('{student_name_entry.get()}','{student_roll_entry.get()}','{student_dob_entry.get()}','{student_contact_entry.get()}','{student_email_entry.get()}','{student_password_entry.get()}');")
+
+        sql1 = (f"INSERT INTO student(sn,srn,sdob,scn,sei,upass) VALUES(%s,%s,%s,%s,%s,%s);")
+        val1 = (student_name_entry.get(),student_roll_entry.get(),student_dob_entry.get(),student_contact_entry.get(),student_email_entry.get(),student_password_entry.get())
+        mycursor.execute(sql1 , val1)
+
         print(mycursor)
         conn.commit()
 
@@ -159,9 +163,8 @@ def register_window():
     register_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
     root1.mainloop()
 
-
 register_btn = Button(root ,text="Add Student", command=register_window)
-register_btn.grid(row=3, column=1)
+register_btn.grid(row=3, column=1 , padx = 20 , pady = 20)
 
 root.mainloop()
 
