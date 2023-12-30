@@ -95,12 +95,30 @@ def Verify_details():
         mycursor.execute(f"DELETE FROM student WHERE sei = '{student_email1_entry.get()}'")
         conn.commit()
 
+    def read_data():
+        root4 = Tk()
+        mycursor.execute('SELECT * FROM student ')
+
+        fetch_data = mycursor.fetchall()
+        m=0
+        for i in fetch_data:
+            for j in range(len(i)):
+                e = Label(root4 , text=i[j])
+                e.grid(row=m,column=j)
+                print(i[j] , end=' ')
+            m=m+1
+            print('\n')
+        root4.mainloop()
+
 
     Update_btn = Button(root3 , text='Update' , command=Update_entry)
     Update_btn.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
 
     delete_btn = Button(root3 , text='Delete' , command=delete_entry)
     delete_btn.grid(row = 7 , column = 1 , padx = 20 , pady = 20)
+
+    read_btn = Button(root3 , text='Dasplay Data' , command=read_data)
+    read_btn.grid(row=8 , column=1)
     root3.mainloop()
 
 login_btn = Button(root ,text="Login", command=Verify_details)
@@ -167,4 +185,3 @@ register_btn = Button(root ,text="Add Student", command=register_window)
 register_btn.grid(row=3, column=1 , padx = 20 , pady = 20)
 
 root.mainloop()
-
