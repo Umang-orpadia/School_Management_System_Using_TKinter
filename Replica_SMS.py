@@ -36,18 +36,8 @@ def read_data():
         print('\n')
     root4.mainloop()
 
-                # def Update_entry():
-                #     mycursor.execute( f"UPDATE student SET sn = '{student_name1_entry.get()}' ,srn = '{student_roll1_entry.get()}' ,sdob = '{student_dob1_entry.get()}' ,scn = '{student_contact1_entry.get()}' ,sei = '{student_email1_entry.get()}' ,upass = '{student_password1_entry.get()}',ur ='{your_role.get()}' WHERE srn = '{student_rollno}';" )
-                #     print(mycursor)
-                #     conn.commit()
-
-                # def delete_entry():
-                #     mycursor.execute(f"DELETE FROM student WHERE sei = '{student_email1_entry.get()}'")
-                #     conn.commit()
-
 def update_function(name ,rollno , dob ,cn , ei ,upass , ur ,basedon ):
     mycursor.execute(f"UPDATE student SET sn='{name}' ,srn ='{rollno}' , sdob = '{dob}' , scn = '{cn}' , sei = '{ei}' , upass = '{upass}' , ur = '{ur}' WHERE srn = '{basedon}';")
-    # mycursor.execute(f"UPDATE student SET sn={name} ,srn ={rollno} , sdob = {dob} , scn= {cn} , sei = {ei} , upass = {upass} , ur = {ur} WHERE srn = {basedon};")
     print(mycursor)
     conn.commit()
 
@@ -214,10 +204,6 @@ def login_window_function():
                 user_role1 = OptionMenu(edit_window , your_role , *options )
                 user_role1.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
 
-                # def Update_entry():
-                #     mycursor.execute( f"UPDATE student SET sn = '{student_name1_entry.get()}' ,srn = '{student_roll1_entry.get()}' ,sdob = '{student_dob1_entry.get()}' ,scn = '{student_contact1_entry.get()}' ,sei = '{student_email1_entry.get()}' ,upass = '{student_password1_entry.get()}',ur ='{your_role.get()}' WHERE srn = '{student_rollno}';" )
-                #     print(mycursor)
-                #     conn.commit()
                 def try_update():
                     update_function(student_name1_entry.get(),student_roll1_entry.get(),student_dob1_entry.get(),student_contact1_entry.get(),student_email1_entry.get(),student_password1_entry.get(),your_role.get(),student_rollno)
 
@@ -239,8 +225,6 @@ def login_window_function():
  
             btn(after_login_window,'Edit',update_window_function,1,1)
 
-
-    # login_btn = Button(login_window ,text="Login", command=after_login).grid(row=2, column=1 , padx = 20 , pady = 20)
     btn(login_window,'Login',after_login,2,1)  
 
 
