@@ -148,82 +148,89 @@ def login_window_function():
                 admin_window.mainloop()
             admin_window_function()
         else :
-
-            after_login_window =Tk()
-            after_login_window.geometry('500x300')
-            after_login_window.config(bg='green')
-            def update_window_function():
-
-                edit_window = Tk()
-                edit_window.geometry("800x600")
-                edit_window.title("This is Update Page")
-                edit_window.configure(background='pink')
+            sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
+            val2 = (enteredusername,enteredpassword)
+            mycursor.execute(sql2 , val2)
+            if len(mycursor.fetchall())==1 :
 
 
-                sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
-                val2 = (enteredusername,enteredpassword)
-                mycursor.execute(sql2 , val2)
+                after_login_window =Tk()
+                after_login_window.geometry('500x300')
+                after_login_window.config(bg='green')
+                def update_window_function():
 
-                fetch_data = mycursor.fetchone()
-                print(fetch_data)
-                student_name = fetch_data[0]
-                student_rollno = fetch_data[1]
-                student_dob = fetch_data[2]
-                student_contactno = fetch_data[3]
-                student_emailid = fetch_data[4]
-                student_password = fetch_data[5]
-                user_role = fetch_data[6]
-
-                labelthisas(edit_window,'Name' ,0,0)
-                student_name1_entry = entryfunction(edit_window,0,1)
-                labelthisas(edit_window,'Roll No, : ' ,1,0)
-                student_roll1_entry = entryfunction(edit_window,1,1)
-                labelthisas(edit_window,'Date of Birth : ' ,2,0)
-                student_dob1_entry = entryfunction(edit_window,2,1)
-                labelthisas(edit_window,'Contact No. : ' ,3,0)
-                student_contact1_entry =entryfunction(edit_window,3,1)
-                labelthisas(edit_window,'E-mail : ' ,4,0)
-                student_email1_entry = entryfunction(edit_window,4,1)
-                labelthisas(edit_window,'Password : ' ,5,0)
-                student_password1_entry = entryfunction(edit_window,5,1)
-                labelthisas(edit_window,'Role : ' ,6,0)
-                # student_role_entry = entryfunction(edit_window,6,1)
-
-                student_name1_entry.insert(0,student_name)
-                student_roll1_entry.insert(0,student_rollno)
-                student_dob1_entry.insert(0,student_dob)
-                student_contact1_entry.insert(0,student_contactno)
-                student_email1_entry.insert(0,student_emailid)
-                student_password1_entry.insert(0,student_password)
-                # student_role_entry.insert(0,user_role)
-
-                options = ['Student','Teacher']
-                your_role = StringVar(edit_window)
-                your_role.set(user_role)
-
-                user_role1 = OptionMenu(edit_window , your_role , *options )
-                user_role1.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
-
-                def try_update():
-                    update_function(student_name1_entry.get(),student_roll1_entry.get(),student_dob1_entry.get(),student_contact1_entry.get(),student_email1_entry.get(),student_password1_entry.get(),your_role.get(),student_rollno)
-
-                def delete_entry():
-                    mycursor.execute(f"DELETE FROM student WHERE sei = '{student_email1_entry.get()}'")
-                    conn.commit()
+                    edit_window = Tk()
+                    edit_window.geometry("800x600")
+                    edit_window.title("This is Update Page")
+                    edit_window.configure(background='pink')
 
 
-                btn(edit_window,'Update',try_update,7,1)
-                # btn(edit_window,'Update',Update_entry,7,1)
-                btn(edit_window,'Delete',delete_entry,8,1)
+                    sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
+                    val2 = (enteredusername,enteredpassword)
+                    mycursor.execute(sql2 , val2)
 
-                edit_window.mainloop()
-            
+                    fetch_data = mycursor.fetchone()
+                    print(fetch_data)
+                    student_name = fetch_data[0]
+                    student_rollno = fetch_data[1]
+                    student_dob = fetch_data[2]
+                    student_contactno = fetch_data[3]
+                    student_emailid = fetch_data[4]
+                    student_password = fetch_data[5]
+                    user_role = fetch_data[6]
 
-                after_login_window.mainloop()
+                    labelthisas(edit_window,'Name' ,0,0)
+                    student_name1_entry = entryfunction(edit_window,0,1)
+                    labelthisas(edit_window,'Roll No, : ' ,1,0)
+                    student_roll1_entry = entryfunction(edit_window,1,1)
+                    labelthisas(edit_window,'Date of Birth : ' ,2,0)
+                    student_dob1_entry = entryfunction(edit_window,2,1)
+                    labelthisas(edit_window,'Contact No. : ' ,3,0)
+                    student_contact1_entry =entryfunction(edit_window,3,1)
+                    labelthisas(edit_window,'E-mail : ' ,4,0)
+                    student_email1_entry = entryfunction(edit_window,4,1)
+                    labelthisas(edit_window,'Password : ' ,5,0)
+                    student_password1_entry = entryfunction(edit_window,5,1)
+                    labelthisas(edit_window,'Role : ' ,6,0)
+                    # student_role_entry = entryfunction(edit_window,6,1)
 
-            btn(after_login_window,'Display Data',read_data,0,1)
- 
-            btn(after_login_window,'Edit',update_window_function,1,1)
+                    student_name1_entry.insert(0,student_name)
+                    student_roll1_entry.insert(0,student_rollno)
+                    student_dob1_entry.insert(0,student_dob)
+                    student_contact1_entry.insert(0,student_contactno)
+                    student_email1_entry.insert(0,student_emailid)
+                    student_password1_entry.insert(0,student_password)
+                    # student_role_entry.insert(0,user_role)
+
+                    options = ['Student','Teacher']
+                    your_role = StringVar(edit_window)
+                    your_role.set(user_role)
+
+                    user_role1 = OptionMenu(edit_window , your_role , *options )
+                    user_role1.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+
+                    def try_update():
+                        update_function(student_name1_entry.get(),student_roll1_entry.get(),student_dob1_entry.get(),student_contact1_entry.get(),student_email1_entry.get(),student_password1_entry.get(),your_role.get(),student_rollno)
+
+                    def delete_entry():
+                        mycursor.execute(f"DELETE FROM student WHERE sei = '{student_email1_entry.get()}'")
+                        conn.commit()
+
+
+                    btn(edit_window,'Update',try_update,7,1)
+                    # btn(edit_window,'Update',Update_entry,7,1)
+                    btn(edit_window,'Delete',delete_entry,8,1)
+
+                    edit_window.mainloop()
+                
+
+                    after_login_window.mainloop()
+
+                btn(after_login_window,'Display Data',read_data,0,1)
+    
+                btn(after_login_window,'Edit',update_window_function,1,1)
+            else :
+                print('Something went wrong')
 
     btn(login_window,'Login',after_login,2,1)  
 
