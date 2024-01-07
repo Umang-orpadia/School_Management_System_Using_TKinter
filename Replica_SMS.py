@@ -36,6 +36,13 @@ def read_data():
         print('\n')
     root4.mainloop()
 
+def insertfunction(student_name_entry,student_roll_entry,student_dob_entry,student_contact_entry,student_email_entry,your_role,student_password_entry):
+    sql = (f"INSERT INTO student(sn,srn,sdob,scn,sei,ur,upass) VALUES(%s,%s,%s,%s,%s,%s,%s);")
+    val = (student_name_entry,student_roll_entry,student_dob_entry,student_contact_entry,student_email_entry,your_role,student_password_entry)
+    mycursor.execute(sql , val)
+    print(mycursor)
+    conn.commit()
+
 def update_function(name ,rollno , dob ,cn , ei ,upass , ur ,basedon ):
     mycursor.execute(f"UPDATE student SET sn='{name}' ,srn ='{rollno}' , sdob = '{dob}' , scn = '{cn}' , sei = '{ei}' , upass = '{upass}' , ur = '{ur}' WHERE srn = '{basedon}';")
     print(mycursor)
@@ -63,7 +70,7 @@ def login_window_function():
         enteredusername =username_entry.get()
         enteredpassword = password_entry.get()
         print(enteredusername)
-        print(enteredpassword)  
+        print(enteredpassword)
         if enteredusername == 'admin' and enteredpassword == 'admin':
             def admin_window_function():
                 admin_window = Tk()
@@ -100,15 +107,10 @@ def login_window_function():
                     labelthisas(register_user_window,'Password',5,0)
                     student_password_entry = entryfunction(register_user_window,5,1)
 
-                    def register():
+                    def insertit():
+                        insertfunction(student_name_entry.get(),student_roll_entry.get(),student_dob_entry.get(),student_contact_entry.get(),student_email_entry.get(),your_role.get(),student_password_entry.get())
 
-                        sql1 = (f"INSERT INTO student(sn,srn,sdob,scn,sei,ur,upass) VALUES(%s,%s,%s,%s,%s,%s,%s);")
-                        val1 = (student_name_entry.get(),student_roll_entry.get(),student_dob_entry.get(),student_contact_entry.get(),student_email_entry.get(),your_role.get(),student_password_entry.get() )
-                        mycursor.execute(sql1 , val1)
-                        print(mycursor)
-                        conn.commit()
-
-                    btn(register_user_window,'Register',register,7,1)
+                    btn(register_user_window,'Register',insertit,7,1)
                     register_user_window.mainloop()
                 def admin_college_register_function():
 
@@ -142,7 +144,7 @@ def login_window_function():
                 btn(admin_window,'Add User',register_user_window_function,3,1)
                 
                 btn(admin_window,'Add College',admin_college_register_function,4,1)
-                btn(admin_window,'Display Data',read_data,5,1)
+                # btn(admin_window,'Display Data',read_data,5,1)
 
                 
                 admin_window.mainloop()
@@ -218,7 +220,6 @@ def login_window_function():
 
 
                     btn(edit_window,'Update',try_update,7,1)
-                    # btn(edit_window,'Update',Update_entry,7,1)
                     btn(edit_window,'Delete',delete_entry,8,1)
 
                     edit_window.mainloop()
