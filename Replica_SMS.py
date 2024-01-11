@@ -97,7 +97,7 @@ def admin_window_function():
     admin_window.mainloop()
     
 
-def update_window_function():
+def update_window_function(enteredusername,enteredpassword):
 
     edit_window = Tk()
     edit_window.geometry("800x600")
@@ -162,9 +162,33 @@ def update_window_function():
 
     edit_window.mainloop()
 
+# ~~~~~~~~~~~Verify Detail~~~~~~~~~~~~~~~~~
+def after_login(username_entry,password_entry):
+    enteredusername =username_entry.get()
+    enteredpassword = password_entry.get()
+    print(enteredusername)
+    print(enteredpassword)
+    if enteredusername == 'admin' and enteredpassword == 'admin':
+        admin_window_function()
+    elif enteredusername != 'admin' and  enteredpassword != 'admin':
+        sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
+        val2 = (enteredusername,enteredpassword)
+        mycursor.execute(sql2 , val2)
+        if len(mycursor.fetchall())==1 :
 
+
+            after_login_window =Tk()
+            after_login_window.geometry('500x300')
+            after_login_window.config(bg='green')
+            
+            btn(after_login_window,'Display Data',read_data,0,1)
+
+            btn(after_login_window,'Edit',update_window_function(enteredusername,enteredpassword),1,1)
+
+            after_login_window.mainloop()
+        else :
+            print('Something went wrong')
     
-
 
 def login_window_function():
 
@@ -177,43 +201,17 @@ def login_window_function():
 
     labelthisas(login_window ,'Username',0,0)
     labelthisas(login_window,'Password',1,0)
-    username_entry =entryfunction(login_window,0,1)
+    username_entry = entryfunction(login_window,0,1)
     password_entry = entryfunction(login_window,1,1)
 
-
-
     
-    # ~~~~~~~~~~~Verify Detail~~~~~~~~~~~~~~~~~
-    def after_login():
-        enteredusername =username_entry.get()
-        enteredpassword = password_entry.get()
-        print(enteredusername)
-        print(enteredpassword)
-        if enteredusername == 'admin' and enteredpassword == 'admin':
-            admin_window_function()
-        else :
-            sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
-            val2 = (enteredusername,enteredpassword)
-            mycursor.execute(sql2 , val2)
-            if len(mycursor.fetchall())==1 :
 
 
-                after_login_window =Tk()
-                after_login_window.geometry('500x300')
-                after_login_window.config(bg='green')
-                
-                btn(after_login_window,'Display Data',read_data,0,1)
-    
-                btn(after_login_window,'Edit',update_window_function,1,1)
-
-                after_login_window.mainloop()
-            else :
-                print('Something went wrong')
-
-    btn(login_window,'Login',after_login,2,1)  
+    btn(login_window,'Login',after_login(username_entry,password_entry),2,1)  
 
 
     login_window.mainloop()
+    return username_entry ,password_entry
 
 login_window_function()
     
