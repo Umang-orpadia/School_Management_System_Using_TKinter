@@ -108,7 +108,9 @@ def after_login():
             sql2 = ( f' SELECT * FROM student WHERE sei = %s AND upass = %s ')
             val2 = (enteredusername,enteredpassword)
             mycursor.execute(sql2 , val2)
-            if len(mycursor.fetchall())==1 :
+            executed_query = mycursor.fetchone()
+            print(executed_query)
+            if executed_query[6]=='Teacher' :
 
 
                 after_login_window =Tk()
@@ -183,6 +185,10 @@ def after_login():
                 btn(after_login_window,'Edit',update_window_function,1,1)
 
                 after_login_window.mainloop()
+            elif executed_query[6]=='Student' :
+                print('ok')
+            else :
+                print('Nither Student nor Teacher')
         else :
             print('Something went wrong')
 
