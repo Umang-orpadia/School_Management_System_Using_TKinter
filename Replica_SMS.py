@@ -3,12 +3,13 @@ from tkinter import *
 import mysql.connector
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~First Window~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~  Connection Part  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 conn = mysql.connector.connect(host = "localhost" , user = "root" , password = "")
 mycursor = conn.cursor()
 mycursor.execute('use school_system;')
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Widgits Function  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def labelthisas(mastername , displaytext , r,c):
     labelthisas = Label(mastername , text=displaytext)
     labelthisas.grid(row=r , column=c ,padx=20 , pady=20)
@@ -20,7 +21,9 @@ def entryfunction(mastername , r, c):
 
 def btn(mastername , btntext,givecommand,r,c):
     Button(mastername , text=btntext , command=givecommand ).grid(row=r , column=c , padx=20 , pady=20)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Reading data from student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def read_data():
     root4 = Tk()
     mycursor.execute('SELECT * FROM student ')
@@ -35,19 +38,25 @@ def read_data():
         m=m+1
         print('\n')
     root4.mainloop()
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Inserting data into student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def insertfunction(student_name_entry,student_roll_entry,student_dob_entry,student_contact_entry,student_email_entry,your_role,student_password_entry):
     sql = (f"INSERT INTO student(sn,srn,sdob,scn,sei,ur,upass) VALUES(%s,%s,%s,%s,%s,%s,%s);")
     val = (student_name_entry,student_roll_entry,student_dob_entry,student_contact_entry,student_email_entry,your_role,student_password_entry)
     mycursor.execute(sql , val)
     print(mycursor)
     conn.commit()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Updaing records from student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def update_function(name ,rollno , dob ,cn , ei ,upass , ur ,basedon ):
     mycursor.execute(f"UPDATE student SET sn='{name}' ,srn ='{rollno}' , sdob = '{dob}' , scn = '{cn}' , sei = '{ei}' , upass = '{upass}' , ur = '{ur}' WHERE srn = '{basedon}';")
     print(mycursor)
     conn.commit()
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Registering Student and techer into student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def register_user_window_function():
 
     register_user_window = Tk()
@@ -82,7 +91,9 @@ def register_user_window_function():
 
     btn(register_user_window,'Register',insertit,7,1)
     register_user_window.mainloop()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Admin View Window  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def admin_window_function():
     admin_window = Tk()
     admin_window.title('You are Logedin as admin')
@@ -95,7 +106,9 @@ def admin_window_function():
 
     
     admin_window.mainloop()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Updating teacher and student  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def update_window_function():
 
     edit_window = Tk()
@@ -160,8 +173,9 @@ def update_window_function():
     btn(edit_window,'Delete',delete_entry,8,1)
 
     edit_window.mainloop()
-
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  After login button process  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def after_login():
         global enteredusername
         global enteredpassword
@@ -194,12 +208,9 @@ def after_login():
                 print('Nither Student nor Teacher')
         else :
             print('Something went wrong')
-
-
-# ~~~~~~~~~~~Verify Detail~~~~~~~~~~~~~~~~~
-
-    
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  First window Login User Window ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 def login_window_function():
 
 
@@ -227,4 +238,4 @@ def login_window_function():
     login_window.mainloop()
 
 login_window_function()
-    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
