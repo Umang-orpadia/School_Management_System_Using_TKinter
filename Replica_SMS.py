@@ -10,17 +10,17 @@ mycursor.execute('use school_system;')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Widgits Function  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def labelthisas(mastername , displaytext , r,c):
-    labelthisas = Label(mastername , text=displaytext)
+def labelthisas(mastername , displaytext , r,c , bg_col='white', fg_col='Black'):
+    labelthisas = Label(mastername ,font="lucida 20 bold", bg=bg_col , fg=fg_col , text=displaytext)
     labelthisas.grid(row=r , column=c ,padx=20 , pady=20)
 
-def entryfunction(mastername , r, c):
-    entry = Entry(mastername)
+def entryfunction(mastername , r, c, bg_col='white', fg_col='Black'):
+    entry = Entry(mastername,font="lucida 20 bold", bg=bg_col , fg=fg_col ,relief=SUNKEN,bd=10)
     entry.grid(row=r , column=c)
     return entry
 
-def btn(mastername , btntext,givecommand,r,c):
-    Button(mastername , text=btntext , command=givecommand ).grid(row=r , column=c , padx=20 , pady=20)
+def btn(mastername , btntext,givecommand,r,c ,bg_col='#afff00'):
+    Button(mastername , text=btntext,font="lucida 20 bold" , command=givecommand ,bg=bg_col ).grid(row=r , column=c , padx=20 , pady=20)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Reading data from student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +32,7 @@ def read_data():
     m=0
     for i in fetch_data:
         for j in range(len(i)):
-            e = Label(root4 , text=i[j])
+            e = Label(root4 , text=i[j] ,font="lucida 20 bold", bg='red' , fg='white' )
             e.grid(row=m,column=j)
             print(i[j] , end=' ')
         m=m+1
@@ -76,6 +76,14 @@ def register_user_window_function():
     labelthisas(register_user_window,'E-mail : ',4,0)
     student_email_entry = entryfunction(register_user_window,4,1)
 
+    def changeabc(*args):
+        your_role1 = your_role.get()
+        if your_role1 == 'Student':
+            print('Traced student')
+        elif your_role1 == 'Teacher':
+            print('Traced Teacher')
+        else:
+            print('Unable to trace')
     options = ['Student','Teacher']
     your_role = StringVar(register_user_window)
     your_role.set('Student')
@@ -85,6 +93,7 @@ def register_user_window_function():
     labelthisas(register_user_window ,'Role : ',6,0)
     labelthisas(register_user_window,'Password',5,0)
     student_password_entry = entryfunction(register_user_window,5,1)
+    your_role.trace_add('write',changeabc)
 
     def insertit():
         insertfunction(student_name_entry.get(),student_roll_entry.get(),student_dob_entry.get(),student_contact_entry.get(),student_email_entry.get(),your_role.get(),student_password_entry.get())
@@ -112,7 +121,7 @@ def admin_window_function():
 def update_window_function():
 
     edit_window = Tk()
-    edit_window.geometry("800x600")
+    edit_window.geometry("800x800")
     edit_window.title("This is Update Page")
     edit_window.configure(background='pink')
 
@@ -131,19 +140,19 @@ def update_window_function():
     student_password = fetch_data[5]
     user_role = fetch_data[6]
 
-    labelthisas(edit_window,'Name' ,0,0)
-    student_name1_entry = entryfunction(edit_window,0,1)
-    labelthisas(edit_window,'Roll No, : ' ,1,0)
-    student_roll1_entry = entryfunction(edit_window,1,1)
-    labelthisas(edit_window,'Date of Birth : ' ,2,0)
-    student_dob1_entry = entryfunction(edit_window,2,1)
-    labelthisas(edit_window,'Contact No. : ' ,3,0)
-    student_contact1_entry =entryfunction(edit_window,3,1)
-    labelthisas(edit_window,'E-mail : ' ,4,0)
-    student_email1_entry = entryfunction(edit_window,4,1)
-    labelthisas(edit_window,'Password : ' ,5,0)
-    student_password1_entry = entryfunction(edit_window,5,1)
-    labelthisas(edit_window,'Role : ' ,6,0)
+    labelthisas(edit_window,'Name' ,0,0,'pink','blue')
+    student_name1_entry = entryfunction(edit_window,0,1,'pink','blue')
+    labelthisas(edit_window,'Roll No, : ' ,1,0,'pink','blue')
+    student_roll1_entry = entryfunction(edit_window,1,1,'pink','blue')
+    labelthisas(edit_window,'Date of Birth : ' ,2,0,'pink','blue')
+    student_dob1_entry = entryfunction(edit_window,2,1,'pink','blue')
+    labelthisas(edit_window,'Contact No. : ' ,3,0,'pink','blue')
+    student_contact1_entry =entryfunction(edit_window,3,1,'pink','blue')
+    labelthisas(edit_window,'E-mail : ' ,4,0,'pink','blue')
+    student_email1_entry = entryfunction(edit_window,4,1,'pink','blue')
+    labelthisas(edit_window,'Password : ' ,5,0,'pink','blue')
+    student_password1_entry = entryfunction(edit_window,5,1,'pink','blue')
+    labelthisas(edit_window,'Role : ' ,6,0,'pink','blue')
     # student_role_entry = entryfunction(edit_window,6,1)
 
     student_name1_entry.insert(0,student_name)
@@ -159,7 +168,8 @@ def update_window_function():
     your_role.set(user_role)
 
     user_role1 = OptionMenu(edit_window , your_role , *options )
-    user_role1.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+    user_role1.configure(bg='#afff00')
+    user_role1.grid(row = 6 , column = 1 , padx = 20 , pady = 20 )
 
     def try_update():
         update_function(student_name1_entry.get(),student_roll1_entry.get(),student_dob1_entry.get(),student_contact1_entry.get(),student_email1_entry.get(),student_password1_entry.get(),your_role.get(),student_rollno)
@@ -221,13 +231,13 @@ def login_window_function():
 
 
 
-    labelthisas(login_window ,'Username',0,0)
-    labelthisas(login_window,'Password',1,0)
+    labelthisas(login_window ,'Username',0,0,'Blue','#ffaa00')
+    labelthisas(login_window,'Password',1,0,'Blue','#ffaa00')
     global username_entry
     global password_entry
     
-    username_entry = entryfunction(login_window,0,1)
-    password_entry = entryfunction(login_window,1,1)
+    username_entry = entryfunction(login_window,0,1,'Blue','#ffaa00')
+    password_entry = entryfunction(login_window,1,1,'Blue','#ffaa00')
     
 
     
@@ -238,4 +248,6 @@ def login_window_function():
     login_window.mainloop()
 
 login_window_function()
+conn.close()
+print('Connection closed')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
