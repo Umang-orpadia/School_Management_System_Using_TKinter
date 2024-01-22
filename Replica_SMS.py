@@ -1,10 +1,11 @@
 from tkinter import *
 # import tkinter as tk
 import mysql.connector
+# from mysql.connector import *
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~  Connection Part  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-conn = mysql.connector.connect(host = "localhost" , user = "root" , password = "")
+conn = mysql.connector.connect(host = "localhost" ,database='school_system', user = "root" , password = "")
 mycursor = conn.cursor()
 mycursor.execute('use school_system;')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,6 +27,7 @@ def btn(mastername , btntext,givecommand,r,c ,bg_col='#afff00'):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Reading data from student table  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def read_data():
     root4 = Tk()
+    root4.geometry('1915x1075+0+0')
     mycursor.execute('SELECT * FROM student ')
 
     fetch_data = mycursor.fetchall()
@@ -33,10 +35,11 @@ def read_data():
     for i in fetch_data:
         for j in range(len(i)):
             e = Label(root4 , text=i[j] ,font="lucida 20 bold", bg='red' , fg='white' )
-            e.grid(row=m,column=j)
+            e.grid(row=m,column=j , padx=10 , pady=10)
             print(i[j] , end=' ')
         m=m+1
         print('\n')
+    btn(root4,'Close',lambda:root4.destroy(),m+1,j+1)
     root4.mainloop()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -60,7 +63,7 @@ def update_function(name ,rollno , dob ,cn , ei ,upass , ur ,basedon ):
 def register_user_window_function():
 
     register_user_window = Tk()
-    register_user_window.geometry('1500x900')
+    register_user_window.geometry('1915x1075+0+0')
     register_user_window.title('This is registration Window')
     register_user_window.configure(background='purple')
 
@@ -90,6 +93,7 @@ def register_user_window_function():
 
     user_role = OptionMenu(register_user_window , your_role , *options )
     user_role.grid(row = 6 , column = 1 , padx = 20 , pady = 20)
+    user_role.configure(bg='#afff00')
     labelthisas(register_user_window ,'Role : ',6,0)
     labelthisas(register_user_window,'Password',5,0)
     student_password_entry = entryfunction(register_user_window,5,1)
@@ -99,6 +103,7 @@ def register_user_window_function():
         insertfunction(student_name_entry.get(),student_roll_entry.get(),student_dob_entry.get(),student_contact_entry.get(),student_email_entry.get(),your_role.get(),student_password_entry.get())
 
     btn(register_user_window,'Register',insertit,7,1)
+    btn(register_user_window,'Cancel',lambda:register_user_window.destroy(),8,1,'red')
     register_user_window.mainloop()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -106,9 +111,10 @@ def register_user_window_function():
 def admin_window_function():
     admin_window = Tk()
     admin_window.title('You are Logedin as admin')
-    admin_window.geometry('800x700')
+    admin_window.geometry('1915x1075+0+0')
 
     btn(admin_window,'Add User',register_user_window_function,3,1)
+    btn(admin_window,'close',lambda:admin_window.destroy(),4,1)
     
     # btn(admin_window,'Add College',admin_college_register_function,4,1)
     # btn(admin_window,'Display Data',read_data,5,1)
@@ -121,7 +127,7 @@ def admin_window_function():
 def update_window_function():
 
     edit_window = Tk()
-    edit_window.geometry("800x800")
+    edit_window.geometry("1915x1075+0+0")
     edit_window.title("This is Update Page")
     edit_window.configure(background='pink')
 
@@ -180,7 +186,8 @@ def update_window_function():
 
 
     btn(edit_window,'Update',try_update,7,1)
-    btn(edit_window,'Delete',delete_entry,8,1)
+    btn(edit_window,'Delete',delete_entry,8,1,'red')
+    btn(edit_window,'Close',lambda:edit_window.destroy(),9,1)
 
     edit_window.mainloop()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -205,11 +212,12 @@ def after_login():
 
 
                 after_login_window =Tk()
-                after_login_window.geometry('500x300')
+                after_login_window.geometry('1915x1075+0+0')
                 after_login_window.config(bg='green')
                 
                 btn(after_login_window,'Display Data',read_data,0,1)
                 btn(after_login_window,'Edit',update_window_function,1,1)
+                btn(after_login_window,'Close',lambda:after_login_window.destroy(),2,1)
 
                 after_login_window.mainloop()
             elif executed_query[6]=='Student' :
@@ -226,7 +234,8 @@ def login_window_function():
 
     login_window = Tk() #This is the 1st activated window
     login_window.title("This is login page") #Defines the title of the window
-    login_window.geometry("800x600") # Defines the dimention of the window
+    login_window.geometry("1915x1075+0+0") # Defines the dimention of the window
+    # login_window.attributes("-fullscreen",True)
     login_window.configure(background="blue") #Decides the color of the page
 
 
@@ -238,11 +247,15 @@ def login_window_function():
     
     username_entry = entryfunction(login_window,0,1,'Blue','#ffaa00')
     password_entry = entryfunction(login_window,1,1,'Blue','#ffaa00')
+    # close_it = Close_window(login_window)
     
+    # def Close_window():
+    #     login_window.destroy()
 
     
 
     btn(login_window,'Login',after_login,2,1)  
+    btn(login_window,'Close',lambda:login_window.destroy(),3,1)  
 
 
     login_window.mainloop()
