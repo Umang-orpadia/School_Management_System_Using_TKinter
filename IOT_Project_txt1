@@ -190,10 +190,49 @@ def Attendence_marking_function():
         year = c[0]
         date = year+'-'+month+'-'+day
         
-        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
-        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
-        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
-        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
+        retrive = db.reference('/lecture')
+        snapshot = retrive.get(shallow=True)
+        yeye = list(snapshot.keys())
+        for i in yeye:
+            if i == date:
+                # lec_details = db.reference(f'/lecture/{i}')
+                duration_retrive = db.reference(f'/lecture/{i}').get(shallow=True)
+                duration_list = list(duration_retrive.keys())
+                print(duration_list)
+                flag = 0
+                for i in duration_list:
+                    x = i.split('_')
+                    start_time = x[0]+''+x[1]
+                    end_time = x[3]+''+x[4]
+                    if start_time <= Currrent_time <= end_time:
+                        lec_details = db.reference(f'/lecture/{date}/{i}/Subject')
+                        # print(lec_details.get())
+
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/Subject').child(f'{lec_details.get()}').set(lec_details.get())
+
+                        print('Attendence Sucessfull')
+                        flag = 1
+                if flag == 0:
+                    print('No Lecture At This Time')
+                elif flag == 1:
+                    print('Attendence Updated')
+                else : 
+                    print('Crazy Crazy')
+            elif i != date:
+                pass
+            else:
+                print('Today No Lectures')
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Working Don't Erase ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
+        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
+        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
+        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # print(datetime.datetime.now())
         # checking2  = checking1.get()
         # checking = int(checking2)
