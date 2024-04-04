@@ -1,0 +1,128 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Require Modules ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+from tkinter import *
+import firebase_admin
+from firebase_admin import db , credentials
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Database Connection Part ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cred = credentials.Certificate('IOTproject/credentials.json')
+firebase_admin.initialize_app(cred,{"databaseURL":"https://iotproject-bcff9-default-rtdb.asia-southeast1.firebasedatabase.app/"})
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Readind data function ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def read_data_function():
+    read_data_window = Tk()
+    read_data_window.title('Reading All data from database')
+    read_data_window.geometry('1915x1075+0+0')
+    Label(read_data_window,text=db.reference('/').get()).grid(row=0,column=0) 
+    btnclo = Button(read_data_window,text='Close',command=lambda:read_data_window.destroy())
+    btnclo.grid(row=1046 , column=0)
+    read_data_window.mainloop()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Adding User Function ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def add_user_function():
+    add_user_window = Tk()
+    add_user_window.geometry('1915x1075+0+0')
+    add_user_window.title('This is the Adding User Window')
+
+    name_lable = Label(add_user_window,text='Enter Your Name : ')
+    name_lable.grid(row=0,column=0)
+
+    name_input = Entry(add_user_window)
+    name_input.grid(row=0 , column=1)
+    
+    roll_lable = Label(add_user_window,text='Enter Your RollNo : ')
+    roll_lable.grid(row=1,column=0)
+
+    roll_input = Entry(add_user_window)
+    roll_input.grid(row=1 , column=1)
+
+    email_id_lable = Label(add_user_window,text='Email Id')
+    email_id_lable.grid(row=2,column=0)
+
+    email_id_entry = Entry(add_user_window)
+    email_id_entry.grid(row=2,column=1)
+    email = email_id_entry.get()
+    
+    def Register_user():
+        db.reference(f'/student/{email_id_entry.get()}').child('email').set(f'{email_id_entry.get()}')
+        db.reference(f'/student/{email_id_entry.get()}').child('name').set(f"{name_input.get()}")
+        db.reference(f'/student/{email_id_entry.get()}').child('password').set(f"{name_input.get()}")
+        db.reference(f'/student/{email_id_entry.get()}').child('Rollno').set(f"{roll_input.get()}")
+
+        # db.reference(f'student/{email_id_entry.get()}').child({'email_id':f'{email_id_entry.get()}','rollno':f'{roll_input.get()}','name':f'{name_input.get()}','password':f'{name_input.get()}'})
+        # db.reference(f'/student/{email_id_entry.get()}').child()
+
+    register_user_btn = Button(add_user_window,text='Register',command=Register_user)
+    register_user_btn.grid(row=4,column=0)
+
+    btnclo = Button(add_user_window,text='Close',command=lambda:add_user_window.destroy())
+    btnclo.grid(row=5 , column=0)
+
+    add_user_window.mainloop()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Entry Window , Login Window~~~~~~~~~~~~~~~~~~~~~~~~~
+def entry_window_function():
+    entry_window = Tk()
+    entry_window.geometry('1915x1075+0+0')
+    entry_window.title('This is the entry window')
+
+    Email_id_lable = Label(entry_window,text='Email_id')
+    Email_id_lable.grid(row=0,column=0)
+
+    Email_id_entry = Entry(entry_window)
+    Email_id_entry.grid(row=0,column=1)
+
+    password_id_lable = Label(entry_window,text='password')
+    password_id_lable.grid(row=1,column=0)
+
+    password_id_entry = Entry(entry_window)
+    password_id_entry.grid(row=1,column=1)
+
+    def login_function():
+        checkit = db.reference(f'/student/{Email_id_entry.get()}').get()
+        email = Email_id_entry.get()
+        if email == checkit:
+            print(checkit)
+        else :
+            print(checkit,email)
+            Label(entry_window,text='Invalid Username or password').grid(row=4,column=0)
+            # Label(entry_window,text=f'{Email_id_entry.get(),checkit.get()}').grid(row=4,column=0)
+
+
+    login_btn = Button(entry_window,text='Login',command=login_function)
+    login_btn.grid(row=2,column=0)
+
+    add_user_btn = Button(entry_window,text='Add User',command=add_user_function)
+    add_user_btn.grid(row=5,column=0)
+
+    read_btn = Button(entry_window,text='Read Data',command=read_data_function)
+    read_btn.grid(row=3,column=0)
+
+    btnclo = Button(entry_window,text='Close',command=lambda:entry_window.destroy())
+    btnclo.grid(row=6 , column=0)
+
+    entry_window.mainloop()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+entry_window_function()
+
+# read_data_function()
+# lele = db.reference().update
+
+# print(lele.get())
+# ~~~~~~~~~~~~~~~~~~~~ Read Replace update delete ~~~~~~~~~~~~~~~~~~~~~~~~
+# db.reference('/').update({'student_detail':['python','java','c++']})
+# db.reference('/').update({'student_detail':{'language':['python','java','c++']}})
+# db.reference('/student_detail/language').child('first').set('other')
+# print(db.reference('/name').get())
+# db.reference('/name').set({'sd':'asdasdasdasdas'})
+# db.reference('/student_detail/language/').push().set('javascript')
+# print(db.reference('/').get())
+# db.reference('/name/sd').delete()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
