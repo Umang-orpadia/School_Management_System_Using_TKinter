@@ -14,12 +14,50 @@ firebase_admin.initialize_app(cred,{"databaseURL":"https://iotproject-bcff9-defa
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Readind data function ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def read_data_function():
+
     read_data_window = Tk()
     read_data_window.title('Reading All data from database')
     read_data_window.geometry('1915x1075+0+0')
-    Label(read_data_window,text=db.reference('/').get()).grid(row=0,column=0) 
+
+    Attendence_user_data = db.reference('/Attendence').get(shallow=True)
+    Attendence_user_list = list(Attendence_user_data.keys())
+    row_count = 0
+    column_count = 0
+    for i in Attendence_user_list:
+        column_count = 0
+        Reading_date = db.reference(f'/Attendence/{i}/Date').get()
+        Reading_time = db.reference(f'/Attendence/{i}/Time').get()
+        Reading_email = db.reference(f'/Attendence/{i}/email').get()
+        Reading_name = db.reference(f'/Attendence/{i}/name').get()
+        Label(read_data_window,text=i).grid(row=row_count,column=0)
+        column_count +=1
+        Label(read_data_window,text=Reading_date).grid(row=row_count,column=column_count)
+        column_count +=1
+        Label(read_data_window,text=Reading_time).grid(row=row_count,column=column_count)
+        column_count +=1
+        Label(read_data_window,text=Reading_email).grid(row=row_count,column=column_count)
+        column_count +=1
+        Label(read_data_window,text=Reading_name).grid(row=row_count,column=column_count)
+        column_count += 1
+        reading_subject = db.reference(f'/Attendence/{i}/Subject').get(shallow=True)
+        reading_subject_list = list(reading_subject.keys())
+        for j in reading_subject_list:
+            # column_count = 0
+            the_subjects = db.reference(f'/Attendence/{i}/Subject/{j}').get(shallow=True)
+            print(the_subjects)
+            Label(read_data_window,text=the_subjects).grid(row=row_count,column=column_count)
+            # column_count += 1
+            row_count +=1
+            # the_subjects_list = list(the_subjects.keys())
+            # for k in the_subjects_list:
+            #     column_count = 0
+            #     Label(read_data_window,text=k).grid(row=row_count,column=column_count)
+            #     row_count +=1
+        row_count = row_count + 1
+
     btnclo = Button(read_data_window,text='Close',command=lambda:read_data_window.destroy())
     btnclo.grid(row=1046 , column=0)
+
     read_data_window.mainloop()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -150,6 +188,44 @@ def lecture_schedule_function():
     schedule_btn = Button(lecture_schedule_window,text='Schedule',command=scheduling_lecture)
     schedule_btn.grid(row=4,column=0)
 
+    def Lecture_displaying_function():
+        the_schedule_display_frame = Frame(lecture_schedule_window,bd=10,relief=GROOVE)
+        # the_schedule_display_frame.grid(row=5,column=0)
+        the_schedule_display_frame.place(x=400,y=0,height=900,width=1200)
+        lecture_date = db.reference(f'/lecture').get(shallow=True)
+        lecture_date_list = list(lecture_date.keys())
+        row_count = 0
+        column_count = 0
+        for i in lecture_date_list:
+            column_count = 0
+            # row_count = 0
+            Label(the_schedule_display_frame,text=i).grid(row=row_count,column=column_count)
+            column_count +=1
+            lecture_timeing = db.reference(f'/lecture/{i}').get(shallow=True)
+            lecture_timeing_list = list(lecture_timeing.keys())
+            for j in lecture_timeing_list:
+                
+                Label(the_schedule_display_frame,text=j).grid(row=row_count,column=column_count)
+                column_count +=1
+                hours = db.reference(f'/lecture/{i}/{j}/Hour').get()
+                Minute = db.reference(f'/lecture/{i}/{j}/Minute').get()
+                Subject = db.reference(f'/lecture/{i}/{j}/Subject').get()
+                print(hours,Minute,Subject)
+                Label(the_schedule_display_frame,text=hours).grid(row=row_count,column=column_count)
+                column_count +=1
+                # row_count +=1
+                Label(the_schedule_display_frame,text=Minute).grid(row=row_count,column=column_count)
+                column_count +=1
+                # row_count +=1
+                Label(the_schedule_display_frame,text=Subject).grid(row=row_count,column=column_count)
+                column_count +=1
+
+            row_count +=1
+
+    Lecture_displaying_function()
+    show_schedule_btn = Button(lecture_schedule_window,text='Refresh',command=Lecture_displaying_function)
+    show_schedule_btn.grid(row=5,column=0)
+
     btnclo = Button(lecture_schedule_window,text='Close',command=lambda:lecture_schedule_window.destroy())
     btnclo.grid(row=16 , column=0)
 
@@ -255,21 +331,22 @@ def entry_window_function():
     entry_window = Tk()
     entry_window.geometry('1915x1075+0+0')
     entry_window.title('This is the entry window')
+    entry_window.configure(background='powder blue')
 
-    Email_id_lable = Label(entry_window,text='Email_id')
-    Email_id_lable.grid(row=0,column=0)
+    Email_id_lable = Label(entry_window,text='Email_id',font="lucida 20 bold",bg="powder blue")
+    Email_id_lable.grid(row=0,column=0,padx=10,pady=10)
 
-    Email_id_entry = Entry(entry_window)
-    Email_id_entry.grid(row=0,column=1)
+    Email_id_entry = Entry(entry_window,font="lucida 20 bold",bg="powder blue")
+    Email_id_entry.grid(row=0,column=1,padx=10,pady=10)
 
-    password_id_lable = Label(entry_window,text='password')
-    password_id_lable.grid(row=1,column=0)
+    password_id_lable = Label(entry_window,text='password',font="lucida 20 bold",bg="powder blue")
+    password_id_lable.grid(row=1,column=0,padx=10,pady=10)
 
-    password_id_entry = Entry(entry_window)
-    password_id_entry.grid(row=1,column=1)
+    password_id_entry = Entry(entry_window,font="lucida 20 bold",bg="powder blue")
+    password_id_entry.grid(row=1,column=1,padx=10,pady=10)
 
-    message_lable = Label(entry_window)
-    message_lable.grid(row=2,column=1)
+    message_lable = Label(entry_window,font="lucida 20 bold",bg="powder blue")
+    message_lable.grid(row=2,column=1,padx=10,pady=10)
 
     
     def login_function():
@@ -289,22 +366,22 @@ def entry_window_function():
             # Label(entry_window,text=f'{Email_id_entry.get(),checkit.get()}').grid(row=4,column=0)
 
 
-    login_btn = Button(entry_window,text='Login',command=login_function)
+    login_btn = Button(entry_window,text='Login',command=login_function,font="lucida 20 bold",bg="light green",fg="red")
     login_btn.grid(row=2,column=0)
 
-    add_user_btn = Button(entry_window,text='Add User',command=add_user_function)
+    add_user_btn = Button(entry_window,text='Add User',command=add_user_function,font="lucida 20 bold",bg="light green",fg="red")
     add_user_btn.grid(row=5,column=0)
 
-    read_btn = Button(entry_window,text='Read Data',command=read_data_function)
+    read_btn = Button(entry_window,text='Read Data',command=read_data_function,font="lucida 20 bold",bg="light green",fg="red")
     read_btn.grid(row=3,column=0)
 
-    lec_schedule_btn = Button(entry_window,text='Schedule Lecture',command=lecture_schedule_function)
+    lec_schedule_btn = Button(entry_window,text='Schedule Lecture',command=lecture_schedule_function,font="lucida 20 bold",bg="light green",fg="red")
     lec_schedule_btn.grid(row=6,column=0)
 
-    attendence_btn = Button(entry_window,text='Attendence Mark',command=Attendence_marking_function)
+    attendence_btn = Button(entry_window,text='Attendence Mark',command=Attendence_marking_function,font="lucida 20 bold",bg="light green",fg="red")
     attendence_btn.grid(row=7,column=0)
 
-    btnclo = Button(entry_window,text='Close',command=lambda:entry_window.destroy())
+    btnclo = Button(entry_window,text='Close',command=lambda:entry_window.destroy(),font="lucida 20 bold",bg="red",fg="light green")
     btnclo.grid(row=16 , column=0)
 
 
