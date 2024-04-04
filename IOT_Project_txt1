@@ -29,15 +29,15 @@ def read_data_function():
         Reading_time = db.reference(f'/Attendence/{i}/Time').get()
         Reading_email = db.reference(f'/Attendence/{i}/email').get()
         Reading_name = db.reference(f'/Attendence/{i}/name').get()
-        Label(read_data_window,text=i).grid(row=row_count,column=0)
+        Label(read_data_window,text=i,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=0)
         column_count +=1
-        Label(read_data_window,text=Reading_date).grid(row=row_count,column=column_count)
+        Label(read_data_window,text=Reading_date,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
         column_count +=1
-        Label(read_data_window,text=Reading_time).grid(row=row_count,column=column_count)
+        Label(read_data_window,text=Reading_time,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
         column_count +=1
-        Label(read_data_window,text=Reading_email).grid(row=row_count,column=column_count)
+        Label(read_data_window,text=Reading_email,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
         column_count +=1
-        Label(read_data_window,text=Reading_name).grid(row=row_count,column=column_count)
+        Label(read_data_window,text=Reading_name,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
         column_count += 1
         reading_subject = db.reference(f'/Attendence/{i}/Subject').get(shallow=True)
         reading_subject_list = list(reading_subject.keys())
@@ -45,7 +45,7 @@ def read_data_function():
             # column_count = 0
             the_subjects = db.reference(f'/Attendence/{i}/Subject/{j}').get(shallow=True)
             print(the_subjects)
-            Label(read_data_window,text=the_subjects).grid(row=row_count,column=column_count)
+            Label(read_data_window,text=the_subjects,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
             # column_count += 1
             row_count +=1
             # the_subjects_list = list(the_subjects.keys())
@@ -55,7 +55,7 @@ def read_data_function():
             #     row_count +=1
         row_count = row_count + 1
 
-    btnclo = Button(read_data_window,text='Close',command=lambda:read_data_window.destroy())
+    btnclo = Button(read_data_window,text='Close',command=lambda:read_data_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
     btnclo.grid(row=1046 , column=0)
 
     read_data_window.mainloop()
@@ -67,32 +67,35 @@ def add_user_function():
     add_user_window.geometry('1915x1075+0+0')
     add_user_window.title('This is the Adding User Window')
 
-    name_lable = Label(add_user_window,text='Enter Your Name : ')
-    name_lable.grid(row=0,column=0)
+    Register_frame = Frame(add_user_window,bd='10',relief='groove')
+    Register_frame.place(x=550,y=50,height=600,width=800)
 
-    name_input = Entry(add_user_window)
+    name_lable = Label(Register_frame,text='Enter Your Name : ',font="lucida 20 bold",bg="powder blue")
+    name_lable.grid(row=0,column=0,padx=10,pady=10)
+
+    name_input = Entry(Register_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     name_input.grid(row=0 , column=1)
     
-    roll_lable = Label(add_user_window,text='Enter Rollno')
+    roll_lable = Label(Register_frame,text='Enter Rollno',font="lucida 20 bold",bg="powder blue")
     roll_lable.grid(row=1,column=0)
 
-    roll_input = Entry(add_user_window)
+    roll_input = Entry(Register_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     roll_input.grid(row=1 , column=1)
 
-    email_id_lable = Label(add_user_window,text='Email Id')
+    email_id_lable = Label(Register_frame,text='Email Id',font="lucida 20 bold",bg="powder blue")
     email_id_lable.grid(row=2,column=0)
 
-    email_id_entry = Entry(add_user_window)
+    email_id_entry = Entry(Register_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     email_id_entry.grid(row=2,column=1)
     
-    password_lable = Label(add_user_window,text='Enter Password')
+    password_lable = Label(Register_frame,text='Enter Password',font="lucida 20 bold",bg="powder blue")
     password_lable.grid(row=3,column=0)
 
-    password_input = Entry(add_user_window)
+    password_input = Entry(Register_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     password_input.grid(row=3,column=1)
 
-    feedback_lable = Label(add_user_window)
-    feedback_lable.grid(row=6,column=1)
+    feedback_lable = Label(Register_frame,font="lucida 20 bold",bg="powder blue")
+    feedback_lable.grid(row=4,column=1)
 
 
     def changeabc(*args): 
@@ -107,12 +110,13 @@ def add_user_function():
             print('Unable to trace')
 
     options = ['Student','Teacher']
-    your_role = StringVar(add_user_window)
+    your_role = StringVar(Register_frame)
     your_role.set('Student')
 
 
-    user_role = OptionMenu(add_user_window , your_role , *options )
-    user_role.grid(row = 8 , column = 1 )
+    user_role = OptionMenu(Register_frame , your_role , *options )
+    user_role.grid(row = 5 , column = 1 )
+    user_role.configure(bg='#afff00')
     your_role.trace_add('write',changeabc)
 
 
@@ -134,10 +138,10 @@ def add_user_function():
         # db.reference(f'student/{email_id_entry.get()}').child({'email_id':f'{email_id_entry.get()}','rollno':f'{roll_input.get()}','name':f'{name_input.get()}','password':f'{name_input.get()}'})
         # db.reference(f'/student/{email_id_entry.get()}').child()
 
-    register_user_btn = Button(add_user_window,text='Register',command=Register_user)
+    register_user_btn = Button(Register_frame,text='Register',command=Register_user,font="lucida 20 bold",bg="light green",fg="red",width=25)
     register_user_btn.grid(row=4,column=0)
 
-    btnclo = Button(add_user_window,text='Close',command=lambda:add_user_window.destroy())
+    btnclo = Button(Register_frame,text='Close',command=lambda:add_user_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
     btnclo.grid(row=5 , column=0)
 
     add_user_window.mainloop()
@@ -333,21 +337,27 @@ def entry_window_function():
     entry_window.title('This is the entry window')
     entry_window.configure(background='powder blue')
 
-    Email_id_lable = Label(entry_window,text='Email_id',font="lucida 20 bold",bg="powder blue")
+    login_frame = LabelFrame(entry_window,text='Login',bd='10',relief='groove')
+    login_frame.place(x=600,y=100,height=600,width=600)
+    login_frame.configure(background='powder blue')
+
+    Email_id_lable = Label(login_frame,text='Email_id',font="lucida 20 bold",bg="powder blue")
     Email_id_lable.grid(row=0,column=0,padx=10,pady=10)
 
-    Email_id_entry = Entry(entry_window,font="lucida 20 bold",bg="powder blue")
+    Email_id_entry = Entry(login_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     Email_id_entry.grid(row=0,column=1,padx=10,pady=10)
 
-    password_id_lable = Label(entry_window,text='password',font="lucida 20 bold",bg="powder blue")
+    password_id_lable = Label(login_frame,text='password',font="lucida 20 bold",bg="powder blue")
     password_id_lable.grid(row=1,column=0,padx=10,pady=10)
 
-    password_id_entry = Entry(entry_window,font="lucida 20 bold",bg="powder blue")
+    password_id_entry = Entry(login_frame,font="lucida 20 bold",bg="powder blue",bd='10',relief=SUNKEN)
     password_id_entry.grid(row=1,column=1,padx=10,pady=10)
 
-    message_lable = Label(entry_window,font="lucida 20 bold",bg="powder blue")
+    message_lable = Label(login_frame,font="lucida 20 bold",bg="powder blue")
     message_lable.grid(row=2,column=1,padx=10,pady=10)
 
+    btn_frame = Frame(login_frame,bd='10',relief='groove')
+    btn_frame.place(x=50,y=200,height=360,width=460)
     
     def login_function():
         checkit = db.reference(f'/student/{Email_id_entry.get()}/email').get()
@@ -366,22 +376,22 @@ def entry_window_function():
             # Label(entry_window,text=f'{Email_id_entry.get(),checkit.get()}').grid(row=4,column=0)
 
 
-    login_btn = Button(entry_window,text='Login',command=login_function,font="lucida 20 bold",bg="light green",fg="red")
+    login_btn = Button(btn_frame,text='Login',command=login_function,font="lucida 20 bold",bg="light green",fg="red",width=25)
     login_btn.grid(row=2,column=0)
 
-    add_user_btn = Button(entry_window,text='Add User',command=add_user_function,font="lucida 20 bold",bg="light green",fg="red")
+    add_user_btn = Button(btn_frame,text='Add User',command=add_user_function,font="lucida 20 bold",bg="light green",fg="red",width=25)
     add_user_btn.grid(row=5,column=0)
 
-    read_btn = Button(entry_window,text='Read Data',command=read_data_function,font="lucida 20 bold",bg="light green",fg="red")
+    read_btn = Button(btn_frame,text='Read Data',command=read_data_function,font="lucida 20 bold",bg="light green",fg="red",width=25)
     read_btn.grid(row=3,column=0)
 
-    lec_schedule_btn = Button(entry_window,text='Schedule Lecture',command=lecture_schedule_function,font="lucida 20 bold",bg="light green",fg="red")
+    lec_schedule_btn = Button(btn_frame,text='Schedule Lecture',command=lecture_schedule_function,font="lucida 20 bold",bg="light green",fg="red",width=25)
     lec_schedule_btn.grid(row=6,column=0)
 
-    attendence_btn = Button(entry_window,text='Attendence Mark',command=Attendence_marking_function,font="lucida 20 bold",bg="light green",fg="red")
+    attendence_btn = Button(btn_frame,text='Attendence Mark',command=Attendence_marking_function,font="lucida 20 bold",bg="light green",fg="red",width=25)
     attendence_btn.grid(row=7,column=0)
 
-    btnclo = Button(entry_window,text='Close',command=lambda:entry_window.destroy(),font="lucida 20 bold",bg="red",fg="light green")
+    btnclo = Button(btn_frame,text='Close',command=lambda:entry_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
     btnclo.grid(row=16 , column=0)
 
 
