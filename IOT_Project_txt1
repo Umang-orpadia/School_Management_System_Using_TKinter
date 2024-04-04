@@ -2,6 +2,9 @@
 from tkinter import *
 import firebase_admin
 from firebase_admin import db , credentials
+# from tkcalendar import Calendar , DateEntry
+from tkcalendar import *
+import datetime
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Database Connection Part ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +35,7 @@ def add_user_function():
     name_input = Entry(add_user_window)
     name_input.grid(row=0 , column=1)
     
-    roll_lable = Label(add_user_window,text='Enter Your RollNo : ')
+    roll_lable = Label(add_user_window,text='Enter Rollno')
     roll_lable.grid(row=1,column=0)
 
     roll_input = Entry(add_user_window)
@@ -43,13 +46,52 @@ def add_user_function():
 
     email_id_entry = Entry(add_user_window)
     email_id_entry.grid(row=2,column=1)
-    email = email_id_entry.get()
+    
+    password_lable = Label(add_user_window,text='Enter Password')
+    password_lable.grid(row=3,column=0)
+
+    password_input = Entry(add_user_window)
+    password_input.grid(row=3,column=1)
+
+    feedback_lable = Label(add_user_window)
+    feedback_lable.grid(row=6,column=1)
+
+
+    def changeabc(*args): 
+        your_role1= your_role.get()
+        if your_role1 == 'Student':
+            print('Traced student')
+            roll_lable.config(text='Rollno : ')
+        elif your_role1 == 'Teacher':
+            print('Traced Teacher')
+            roll_lable.config(text='Subject : ')
+        else:
+            print('Unable to trace')
+
+    options = ['Student','Teacher']
+    your_role = StringVar(add_user_window)
+    your_role.set('Student')
+
+
+    user_role = OptionMenu(add_user_window , your_role , *options )
+    user_role.grid(row = 8 , column = 1 )
+    your_role.trace_add('write',changeabc)
+
+
     
     def Register_user():
         db.reference(f'/student/{email_id_entry.get()}').child('email').set(f'{email_id_entry.get()}')
         db.reference(f'/student/{email_id_entry.get()}').child('name').set(f"{name_input.get()}")
-        db.reference(f'/student/{email_id_entry.get()}').child('password').set(f"{name_input.get()}")
-        db.reference(f'/student/{email_id_entry.get()}').child('Rollno').set(f"{roll_input.get()}")
+        db.reference(f'/student/{email_id_entry.get()}').child('password').set(f"{password_input.get()}")
+        if your_role.get() == 'Student':
+            db.reference(f'/student/{email_id_entry.get()}').child('Rollno').set(f"{roll_input.get()}")
+        else:
+            db.reference(f'/student/{email_id_entry.get()}').child('Subject').set(f"{roll_input.get()}")
+        db.reference(f'/student/{email_id_entry.get()}').child('Role').set(f"{your_role.get()}")
+        
+        feedback_lable.config(text='Inserted Sucessfully')
+
+
 
         # db.reference(f'student/{email_id_entry.get()}').child({'email_id':f'{email_id_entry.get()}','rollno':f'{roll_input.get()}','name':f'{name_input.get()}','password':f'{name_input.get()}'})
         # db.reference(f'/student/{email_id_entry.get()}').child()
@@ -61,6 +103,112 @@ def add_user_function():
     btnclo.grid(row=5 , column=0)
 
     add_user_window.mainloop()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Lecture Schedule ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def lecture_schedule_function():
+    lecture_schedule_window = Tk()
+    lecture_schedule_window.geometry('1915x1075+0+0')
+    lecture_schedule_window.title('This the Lecture Scheduling Window')
+
+    Label(lecture_schedule_window,text='Select Date').grid(row=0,column=0)
+
+    cal = DateEntry(lecture_schedule_window, width= 16, background= "magenta3", foreground= "white",bd=2, date_pattern="dd-mm-yyyy")
+    cal.grid(row=0 ,column=1)
+    
+    Label(lecture_schedule_window,text='From').grid(row=1,column=0)
+
+    from_hour = Spinbox(lecture_schedule_window,from_=0,to=23)
+    from_hour.grid(row=1,column=1)
+
+    from_minutes = Spinbox(lecture_schedule_window,from_=0,to=59)
+    from_minutes.grid(row=1,column=2)
+
+    Label(lecture_schedule_window,text='To').grid(row=2,column=0)
+
+    to_from_hour = Spinbox(lecture_schedule_window,from_=0,to=23)
+    to_from_hour.grid(row=2,column=1)
+
+    to_from_minutes = Spinbox(lecture_schedule_window,from_=0,to=59)
+    to_from_minutes.grid(row=2,column=2)
+
+
+    subject_name_lable = Label(lecture_schedule_window,text='Enter Subject')
+    subject_name_lable.grid(row=3,column=0)
+
+    subject_input = Entry(lecture_schedule_window)
+    subject_input.grid(row=3,column=1)
+
+    def scheduling_lecture():
+        c = from_hour.get() +"_"+from_minutes.get()+"_To_"+ to_from_hour.get()+"_"+to_from_minutes.get()
+        e = from_hour.get() +"_"+from_minutes.get()
+        d = to_from_hour.get() +"_"+to_from_minutes.get()
+        db.reference(f'/lecture/{cal.get_date()}/{c}').child('Hour').set(f'{e}')
+        db.reference(f'/lecture/{cal.get_date()}/{c}').child('Minute').set(f'{d}')
+        db.reference(f'/lecture/{cal.get_date()}/{c}').child('Subject').set(f'{subject_input.get()}')
+    schedule_btn = Button(lecture_schedule_window,text='Schedule',command=scheduling_lecture)
+    schedule_btn.grid(row=4,column=0)
+
+    btnclo = Button(lecture_schedule_window,text='Close',command=lambda:lecture_schedule_window.destroy())
+    btnclo.grid(row=16 , column=0)
+
+    lecture_schedule_window.mainloop()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~Attendence Marking ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def Attendence_marking_function():
+    attendence_marking_window = Tk()
+    attendence_marking_window.title('This is Attendence marking Window')
+    attendence_marking_window.geometry('1915x1075+0+0')
+
+    Name_label = Label(attendence_marking_window,text='Enter Name')
+    Name_label.grid(row=0,column=0)
+    Name_entry = Entry(attendence_marking_window)
+    Name_entry.grid(row=0,column=1)
+
+    Email_id_label = Label(attendence_marking_window,text='Enter Email id: ')
+    Email_id_label.grid(row=1 , column=0)
+    Email_id_entry = Entry(attendence_marking_window)
+    Email_id_entry.grid(row=1,column=1)
+
+    Attend_label = Label(attendence_marking_window , text='Addendence')
+    Attend_label.grid(row=2 , column=0)
+    
+    checking1 = BooleanVar(attendence_marking_window)
+    # print(checking1)
+    Attend_entry = Checkbutton(attendence_marking_window,variable=checking1 , text='Present')
+    Attend_entry.grid(row=2 , column=1)
+
+    def mark_attendence():
+        a = datetime.datetime.now()
+        b = a.strftime('%Y/%m/%d/%H/%M')
+        c=b.split('/')
+        Currrent_time = c[3]+""+c[4]
+        day = c[2]
+        month = c[1]
+        year = c[0]
+        date = year+'-'+month+'-'+day
+        
+        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
+        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
+        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
+        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
+        # print(datetime.datetime.now())
+        # checking2  = checking1.get()
+        # checking = int(checking2)
+        # reee = db.reference('/language').key
+        # lele = reee.limit_to_last(1).get()
+        # print(reee)
+        # pass
+    
+    att_btn = Button(attendence_marking_window,text='Mark',command=mark_attendence)
+    att_btn.grid(row=5 , column=0)
+
+    clontn = Button(attendence_marking_window,text='Close',command=lambda:attendence_marking_window.destroy())
+    clontn.grid(row=6, column=0)
+    attendence_marking_window.mainloop()
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Entry Window , Login Window~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,14 +229,24 @@ def entry_window_function():
     password_id_entry = Entry(entry_window)
     password_id_entry.grid(row=1,column=1)
 
+    message_lable = Label(entry_window)
+    message_lable.grid(row=2,column=1)
+
+    
     def login_function():
-        checkit = db.reference(f'/student/{Email_id_entry.get()}').get()
+        checkit = db.reference(f'/student/{Email_id_entry.get()}/email').get()
         email = Email_id_entry.get()
-        if email == checkit:
-            print(checkit)
+
+        checkit2 = db.reference(f'/student/{Email_id_entry.get()}/password').get()
+        password = password_id_entry.get()
+
+        if email == checkit and password == checkit2:
+            # Label(entry_window,text='Login SUcessfull').grid(row=4,column=0)
+            message_lable.config(text='Login Sucessfull')
         else :
             print(checkit,email)
-            Label(entry_window,text='Invalid Username or password').grid(row=4,column=0)
+            message_lable.config(text='incorrect Username Or password')
+            # Label(entry_window,text='Invalid Username or password').grid(row=4,column=0)
             # Label(entry_window,text=f'{Email_id_entry.get(),checkit.get()}').grid(row=4,column=0)
 
 
@@ -101,8 +259,15 @@ def entry_window_function():
     read_btn = Button(entry_window,text='Read Data',command=read_data_function)
     read_btn.grid(row=3,column=0)
 
+    lec_schedule_btn = Button(entry_window,text='Schedule Lecture',command=lecture_schedule_function)
+    lec_schedule_btn.grid(row=6,column=0)
+
+    attendence_btn = Button(entry_window,text='Attendence Mark',command=Attendence_marking_function)
+    attendence_btn.grid(row=7,column=0)
+
     btnclo = Button(entry_window,text='Close',command=lambda:entry_window.destroy())
-    btnclo.grid(row=6 , column=0)
+    btnclo.grid(row=16 , column=0)
+
 
     entry_window.mainloop()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,6 +288,3 @@ entry_window_function()
 # print(db.reference('/').get())
 # db.reference('/name/sd').delete()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
