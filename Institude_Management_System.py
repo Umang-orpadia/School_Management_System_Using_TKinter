@@ -1,7 +1,6 @@
 from tkinter import *
-# import tkinter as tk
+import tkinter as tk
 import mysql.connector
-# from mysql.connector import *
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~  Connection Part  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,7 +192,7 @@ def update_window_function():
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  After login button process  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def after_login():
+def after_login(*args):
         global enteredusername
         global enteredpassword
         enteredusername =username_entry.get()
@@ -238,7 +237,9 @@ def login_window_function():
     # login_window.attributes("-fullscreen",True)
     login_window.configure(background="blue") #Decides the color of the page
 
-
+    def destroy1(mastername, *args):
+        login_window.destroy()
+        print(mastername)
 
     labelthisas(login_window ,'Username',0,0,'Blue','#ffaa00')
     labelthisas(login_window,'Password',1,0,'Blue','#ffaa00')
@@ -247,17 +248,14 @@ def login_window_function():
     
     username_entry = entryfunction(login_window,0,1,'Blue','#ffaa00')
     password_entry = entryfunction(login_window,1,1,'Blue','#ffaa00')
-    # close_it = Close_window(login_window)
-    
-    # def Close_window():
-    #     login_window.destroy()
 
-    
+    btn(login_window, "Login", after_login, 2, 1)
 
-    btn(login_window,'Login',after_login,2,1)  
-    btn(login_window,'Close',lambda:login_window.destroy(),3,1)  
+    btn(login_window,'Close',lambda:login_window.destroy(),3,1)
 
 
+    login_window.bind("<Return>",after_login)
+    login_window.bind("<Escape>",destroy1)
     login_window.mainloop()
 
 login_window_function()
