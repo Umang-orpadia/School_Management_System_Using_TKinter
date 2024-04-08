@@ -14,48 +14,15 @@ firebase_admin.initialize_app(cred,{"databaseURL":"https://iotproject-bcff9-defa
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Readind data function ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def read_data_function():
-
+    # @DeprecationWarning       !!!!!!!!!!!!!!!!!!!!!       Reading Data Not Updated        !!!!!!!!!!!!!!!
     read_data_window = Tk()
-    read_data_window.title('Reading All data from database')
+    read_data_window.title('Reading Attendence data from database')
     read_data_window.geometry('1915x1075+0+0')
     reading_data_frame = Frame(read_data_window,bd='10',relief='groove')
     reading_data_frame.place(x=10,y=10,height=350,width=1000)
-    Attendence_user_data = db.reference('/Attendence').get(shallow=True)
-    Attendence_user_list = list(Attendence_user_data.keys())
-    row_count = 0
-    column_count = 0
-    for i in Attendence_user_list:
-        column_count = 0
-        Reading_date = db.reference(f'/Attendence/{i}/Date').get()
-        Reading_time = db.reference(f'/Attendence/{i}/Time').get()
-        Reading_email = db.reference(f'/Attendence/{i}/email').get()
-        Reading_name = db.reference(f'/Attendence/{i}/name').get()
-        Label(reading_data_frame,text=i,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=0)
-        column_count +=1
-        Label(reading_data_frame,text=Reading_date,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
-        column_count +=1
-        Label(reading_data_frame,text=Reading_time,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
-        column_count +=1
-        Label(reading_data_frame,text=Reading_email,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
-        column_count +=1
-        Label(reading_data_frame,text=Reading_name,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
-        column_count += 1
-        reading_subject = db.reference(f'/Attendence/{i}/Subject').get(shallow=True)
-        reading_subject_list = list(reading_subject.keys())
-        for j in reading_subject_list:
-            # column_count = 0
-            the_subjects = db.reference(f'/Attendence/{i}/Subject/{j}').get(shallow=True)
-            print(the_subjects)
-            Label(reading_data_frame,text=the_subjects,font="lucida 20 bold",bg="powder blue").grid(row=row_count,column=column_count,padx=10,pady=10)
-            # column_count += 1
-            row_count +=1
-            # the_subjects_list = list(the_subjects.keys())
-            # for k in the_subjects_list:
-            #     column_count = 0
-            #     Label(read_data_window,text=k).grid(row=row_count,column=column_count)
-            #     row_count +=1
-        row_count = row_count + 1
-
+   
+    btn_Show_record = Button(reading_data_frame,text='Show',font="lucida 20 bold",bg="light green",fg="red",width=25)
+    btn_Show_record.grid(row=1045,column=0)
     btnclo = Button(reading_data_frame,text='Close',command=lambda:read_data_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
     btnclo.grid(row=1046 , column=0)
     # btnclo.place(x=420,y=1550)
@@ -115,14 +82,11 @@ def add_user_function():
     your_role = StringVar(Register_frame)
     your_role.set('Student')
 
-
     user_role = OptionMenu(Register_frame , your_role , *options )
     user_role.grid(row = 5 , column = 1 )
     user_role.configure(bg='#afff00',width = 10,font="lucida 20 bold",fg='red')
     your_role.trace_add('write',changeabc)
 
-
-    
     def Register_user():
         db.reference(f'/student/{email_id_entry.get()}').child('email').set(f'{email_id_entry.get()}')
         db.reference(f'/student/{email_id_entry.get()}').child('name').set(f"{name_input.get()}")
@@ -134,11 +98,6 @@ def add_user_function():
         db.reference(f'/student/{email_id_entry.get()}').child('Role').set(f"{your_role.get()}")
         
         feedback_lable.config(text='Inserted Sucessfully')
-
-
-
-        # db.reference(f'student/{email_id_entry.get()}').child({'email_id':f'{email_id_entry.get()}','rollno':f'{roll_input.get()}','name':f'{name_input.get()}','password':f'{name_input.get()}'})
-        # db.reference(f'/student/{email_id_entry.get()}').child()
 
     register_user_btn = Button(Register_frame,text='Register',command=Register_user,font="lucida 20 bold",bg="light green",fg="red",width=25)
     register_user_btn.grid(row=4,column=0)
@@ -257,14 +216,6 @@ def Attendence_marking_function():
     Email_id_entry = Entry(attendence_marking_window,font="lucida 20 bold")
     Email_id_entry.grid(row=1,column=1)
 
-    # Attend_label = Label(attendence_marking_window , text='Addendence')
-    # Attend_label.grid(row=2 , column=0)
-    
-    # checking1 = BooleanVar(attendence_marking_window)
-    # # print(checking1)
-    # Attend_entry = Checkbutton(attendence_marking_window,variable=checking1 , text='Present')
-    # Attend_entry.grid(row=2 , column=1)
-
     def mark_attendence():
         a = datetime.datetime.now()
         b = a.strftime('%Y/%m/%d/%H/%M')
@@ -280,7 +231,6 @@ def Attendence_marking_function():
         yeye = list(snapshot.keys())
         for i in yeye:
             if i == date:
-                # lec_details = db.reference(f'/lecture/{i}')
                 duration_retrive = db.reference(f'/lecture/{i}').get(shallow=True)
                 duration_list = list(duration_retrive.keys())
                 print(duration_list)
@@ -291,16 +241,19 @@ def Attendence_marking_function():
                     end_time = x[3]+''+x[4]
                     if start_time <= Currrent_time <= end_time:
                         lec_details = db.reference(f'/lecture/{date}/{i}/Subject')
-                        # print(lec_details.get())
-
-                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
-                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
-                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
-                        db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
-                        db.reference(f'/Attendence/{Email_id_entry.get()}/Subject').child(f'{lec_details.get()}').set(lec_details.get())
-
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/{date}').child('Time').set(Currrent_time)
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/{date}').child('name').set(Name_entry.get())
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/{date}').child('email').set(Email_id_entry.get())
+                        db.reference(f'/Attendence/{Email_id_entry.get()}/{date}/Lecture/{start_time+"_"+end_time}').child(f'{lec_details.get()}').set(Currrent_time)
+                        db.reference(f'/lecture/{date}/{i}/Attendes/').child(f'{Email_id_entry.get()}').set(f'{Name_entry.get()}')
                         print('Attendence Sucessfull')
                         flag = 1
+                    # elif end_time <= Currrent_time:
+                    #     print('You are late')
+                    elif start_time >= Currrent_time :
+                        print('You are early')
+                    else :
+                        print('something went wrong with the attendnece mark timing')
                 if flag == 0:
                     print('No Lecture At This Time')
                 elif flag == 1:
@@ -312,20 +265,6 @@ def Attendence_marking_function():
             else:
                 print('Today No Lectures')
 
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Working Don't Erase ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Date').set(date)
-        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('Time').set(Currrent_time)
-        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('name').set(Name_entry.get())
-        # db.reference(f'/Attendence/{Email_id_entry.get()}/').child('email').set(Email_id_entry.get())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # print(datetime.datetime.now())
-        # checking2  = checking1.get()
-        # checking = int(checking2)
-        # reee = db.reference('/language').key
-        # lele = reee.limit_to_last(1).get()
-        # print(reee)
-        # pass
-    
     att_btn = Button(attendence_marking_window,text='Mark',command=mark_attendence,font="lucida 20 bold",bg="light green",fg="red",width=15)
     att_btn.grid(row=5 , column=0)
 
