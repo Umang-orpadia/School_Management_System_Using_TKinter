@@ -19,12 +19,81 @@ def read_data_function():
     read_data_window.title('Reading Attendence data from database')
     read_data_window.geometry('1915x1075+0+0')
     reading_data_frame = Frame(read_data_window,bd='10',relief='groove')
-    reading_data_frame.place(x=10,y=10,height=350,width=1000)
-   
-    btn_Show_record = Button(reading_data_frame,text='Show',font="lucida 20 bold",bg="light green",fg="red",width=25)
-    btn_Show_record.grid(row=1045,column=0)
-    btnclo = Button(reading_data_frame,text='Close',command=lambda:read_data_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
-    btnclo.grid(row=1046 , column=0)
+    # reading_data_frame.place(x=10,y=10,height=350,width=1000)
+    reading_data_frame.grid(row=2,column=0,rowspan=20,columnspan=20)
+
+    cal = DateEntry(read_data_window , width= 16, background= "magenta3", foreground= "white",bd=2, date_pattern="dd-mm-yyyy",font="lucida 20 bold")    
+    cal.grid(row=0 ,column=0)
+    # Name_lable = Label(read_data_window,text='Enter Your Name : ',font="lucida 20 bold",bg="powder blue")
+    # Name_lable.grid(row=1,column=0)
+
+    # Name_Entry = Entry(read_data_window,font="lucida 20 bold",bg="powder blue")
+    # Name_Entry.grid(row=1,column=1)
+
+
+    def Show_attendence_data_for_student():
+        lecture_date = db.reference(f'/lecture').get(shallow=True)
+        lecture_date_list = list(lecture_date.keys())
+        row_counter = 0
+        column_counter = 0
+        for i in lecture_date_list:
+            if str(cal.get_date()) == i:
+
+                Label(reading_data_frame,text='Date').grid(row=row_counter,column=column_counter)
+
+                row_counter += 1 #1
+                column_counter += 1 #1
+
+                Label(reading_data_frame,text=f'{i}').grid(row=row_counter,column=column_counter)
+
+                row_counter += 1 #2
+                column_counter += 1 #2
+
+                lecture_duration = db.reference(f'/lecture/{i}/').get(shallow=True)
+                lecture_duration_list = list(lecture_duration.keys())
+
+                for j in lecture_duration_list:
+
+                    Label(reading_data_frame,text=f'{j}').grid(row=row_counter,column=2)
+
+                    row_counter += 1 #3
+                    column_counter += 1 #3
+
+                    lecture_subject_fetch = db.reference(f'/lecture/{i}/{j}/Subject').get()
+                    Label(reading_data_frame,text=lecture_subject_fetch).grid(row=row_counter - 1,column=3)
+
+                    # row_counter +=1
+
+                    try :
+                        attendes_from_database = db.reference(f'/lecture/{i}/{j}/Attendes/').get(shallow=True)
+                        attendes_from_database_list = list(attendes_from_database.keys())
+                        # print(attendes_from_database_list,attendes_from_database)
+
+
+                        for k in attendes_from_database_list:
+
+                            row_counter += 1 #4
+                            column_counter += 1 #4
+
+                            Label(reading_data_frame,text=f'{k}').grid(row=row_counter,column = 3)
+                            row_counter +=1
+                    except AttributeError:
+                        print('no further data found')
+                        Label(reading_data_frame,text='No further Data found').grid(row=row_counter,column=3)
+                        row_counter += 1
+                    # lecture_details = db.reference(f'/lecture/{i}/{j}').get(shallow=True)
+                    # lecture_details_list = list(lecture_details)
+                    # for k in lecture_details_list:
+                        
+
+            else:
+                print('show attendence else block')
+                # print(str(cal.get_date()))
+
+    btn_Show_record = Button(read_data_window,text='Show',command=Show_attendence_data_for_student,font="lucida 20 bold",bg="light green",fg="red",width=25)
+    btn_Show_record.grid(row=23,column=0)
+    btnclo = Button(read_data_window,text='Close',command=lambda:read_data_window.destroy(),font="lucida 20 bold",bg="red",fg="light green",width=25)
+    btnclo.grid(row=24 , column=0)
     # btnclo.place(x=420,y=1550)
 
     read_data_window.mainloop()
