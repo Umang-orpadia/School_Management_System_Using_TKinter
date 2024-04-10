@@ -39,12 +39,12 @@ def read_data_function():
         for i in lecture_date_list:
             if str(cal.get_date()) == i:
 
-                Label(reading_data_frame,text='Date').grid(row=row_counter,column=column_counter)
+                Label(reading_data_frame,text='Date',font="lucida 20 bold").grid(row=row_counter,column=column_counter)
 
                 row_counter += 1 #1
                 column_counter += 1 #1
 
-                Label(reading_data_frame,text=f'{i}').grid(row=row_counter,column=column_counter)
+                Label(reading_data_frame,text=f'{i}',font="lucida 20 bold").grid(row=row_counter,column=column_counter)
 
                 row_counter += 1 #2
                 column_counter += 1 #2
@@ -52,43 +52,50 @@ def read_data_function():
                 lecture_duration = db.reference(f'/lecture/{i}/').get(shallow=True)
                 lecture_duration_list = list(lecture_duration.keys())
 
-                for j in lecture_duration_list:
+                j = lecture_duration_list[0]
+                read_duration_var1 = j.split('_')
+                read_duration_var2 = read_duration_var1[0]+':'+read_duration_var1[1]+' To '+read_duration_var1[3]+':'+read_duration_var1[4]
 
-                    Label(reading_data_frame,text=f'{j}').grid(row=row_counter,column=2)
+            # for j in lecture_duration_list:
 
-                    row_counter += 1 #3
-                    column_counter += 1 #3
+                print(j,lecture_duration_list)
 
-                    lecture_subject_fetch = db.reference(f'/lecture/{i}/{j}/Subject').get()
-                    Label(reading_data_frame,text=lecture_subject_fetch).grid(row=row_counter - 1,column=3)
+                Label(reading_data_frame,text=f'{read_duration_var2}',font="lucida 20 bold").grid(row=row_counter,column=2)
 
-                    # row_counter +=1
+                row_counter += 1 #3
+                column_counter += 1 #3
 
-                    try :
-                        attendes_from_database = db.reference(f'/lecture/{i}/{j}/Attendes/').get(shallow=True)
-                        attendes_from_database_list = list(attendes_from_database.keys())
-                        # print(attendes_from_database_list,attendes_from_database)
+                lecture_subject_fetch = db.reference(f'/lecture/{i}/{j}/Subject').get()
+                Label(reading_data_frame,text=lecture_subject_fetch,font="lucida 20 bold").grid(row=row_counter - 1,column=3)
+
+                # row_counter +=1
+
+                try :
+                    attendes_from_database = db.reference(f'/lecture/{i}/{j}/Attendes/').get(shallow=True)
+                    attendes_from_database_list = list(attendes_from_database.keys())
+                    # print(attendes_from_database_list,attendes_from_database)
 
 
-                        for k in attendes_from_database_list:
+                    for k in attendes_from_database_list:
 
-                            row_counter += 1 #4
-                            column_counter += 1 #4
+                        row_counter += 1 #4
+                        column_counter += 1 #4
+                        time_of_attendes=db.reference(f'lecture/{i}/{j}/Attendes/{k}').get()
+                        Label(reading_data_frame,text=f'{k}',font="lucida 20 bold").grid(row=row_counter,column = 3)
+                        Label(reading_data_frame,text=f'{time_of_attendes}',font="lucida 20 bold").grid(row=row_counter,column=4)
+                        row_counter +=1
+                except AttributeError:
+                    print('no further data found')
+                    Label(reading_data_frame,text='No further Data found',font="lucida 20 bold").grid(row=row_counter,column=3)
+                    row_counter += 1
+                # lecture_details = db.reference(f'/lecture/{i}/{j}').get(shallow=True)
+                # lecture_details_list = list(lecture_details)
+                # for k in lecture_details_list:
+                    
 
-                            Label(reading_data_frame,text=f'{k}').grid(row=row_counter,column = 3)
-                            row_counter +=1
-                    except AttributeError:
-                        print('no further data found')
-                        Label(reading_data_frame,text='No further Data found').grid(row=row_counter,column=3)
-                        row_counter += 1
-                    # lecture_details = db.reference(f'/lecture/{i}/{j}').get(shallow=True)
-                    # lecture_details_list = list(lecture_details)
-                    # for k in lecture_details_list:
-                        
-
-            else:
-                print('show attendence else block')
-                # print(str(cal.get_date()))
+        # else:
+        #     print('show attendence else block')
+            # print(str(cal.get_date()))
 
     btn_Show_record = Button(read_data_window,text='Show',command=Show_attendence_data_for_student,font="lucida 20 bold",bg="light green",fg="red",width=25)
     btn_Show_record.grid(row=23,column=0)
@@ -314,7 +321,7 @@ def Attendence_marking_function():
                         db.reference(f'/Attendence/{Email_id_entry.get()}/{date}').child('name').set(Name_entry.get())
                         db.reference(f'/Attendence/{Email_id_entry.get()}/{date}').child('email').set(Email_id_entry.get())
                         db.reference(f'/Attendence/{Email_id_entry.get()}/{date}/Lecture/{start_time+"_"+end_time}').child(f'{lec_details.get()}').set(Currrent_time)
-                        db.reference(f'/lecture/{date}/{i}/Attendes/').child(f'{Email_id_entry.get()}').set(f'{Name_entry.get()}')
+                        db.reference(f'/lecture/{date}/{i}/Attendes/').child(f'{Email_id_entry.get()}').set(f'{Currrent_time}')
                         print('Attendence Sucessfull')
                         flag = 1
                     # elif end_time <= Currrent_time:
