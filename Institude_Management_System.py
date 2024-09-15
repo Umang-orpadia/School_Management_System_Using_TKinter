@@ -4,7 +4,7 @@ import mysql.connector
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~  Connection Part  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-conn = mysql.connector.connect(host = "localhost" ,database='school_system', user = "root" , password = "")
+conn = mysql.connector.connect(host = "localhost" ,database='school_system', user = "root" , password = "root")
 mycursor = conn.cursor()
 mycursor.execute('use school_system;')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -207,9 +207,9 @@ def after_login(*args):
             mycursor.execute(sql2 , val2)
             executed_query = mycursor.fetchone()
             print(executed_query)
-            if executed_query[6]=='Teacher' :
-
-
+            if executed_query == None:
+                print('Incorrect username or password')
+            elif executed_query[6]=='Teacher' :
                 after_login_window =Tk()
                 after_login_window.geometry('1915x1075+0+0')
                 after_login_window.config(bg='green')
